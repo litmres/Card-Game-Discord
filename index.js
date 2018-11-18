@@ -30,6 +30,8 @@ socket.addEventListener('message', function(event) {
 });
 
 function createCard(user){
+	const container = document.getElementsByClassName("container")[0];
+	
     const card = document.createElement("div");
     card.setAttribute("class", "card-container");
 
