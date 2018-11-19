@@ -188,6 +188,13 @@ function animate(){
   ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
   ctx.scale(.5,.5);
 
+  if(allCards.length < 1){
+    const canvas=document.getElementById("canvas");
+    const ctx=canvas.getContext("2d");
+    ctx.font = "30px Arial";
+    ctx.fillText("Rendering Cards...",20,50);
+  }
+  
   cardDeck.forEach(element => element.drawBack());
 
   handCards.forEach((element) =>{
