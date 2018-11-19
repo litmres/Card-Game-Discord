@@ -24,6 +24,7 @@ class Card{
     this.back.src=backImage;
     this.movingToHand = false;
     this.flipped = false;
+    this.discarding = false;
   }
 
   isAtDestination(){
@@ -48,16 +49,21 @@ class Card{
     this.velY = Math.sin(angle) * magnitude;
   }
 
-  moveToDestination(){
-    if(this.x+this.velX > this.dx){
-      this.x = this.dx;
-    }else{
-      this.x += this.velX;
-    }
+  getDistance(x, dx, y, dy){
+    const a = x - dx;
+    const b = y - dy;
 
-    if(this.y+this.velY > this.dy){
+    const c = Math.sqrt( a*a + b*b );
+
+    return c;
+  }
+
+  moveToDestination(){
+    if(this.getDistance(this.x, this.dx, this.y, this.dy) < 40){
+      this.x = this.dx;
       this.y = this.dy;
     }else{
+      this.x += this.velX;
       this.y += this.velY;
     }
   }
@@ -99,6 +105,7 @@ class Card{
 const allCards = [];
 const cardDeck = [];
 const handCards = [];
+const discardStack =[];
 
 async function createCards(){
   const container = document.getElementsByClassName("container")[0];
@@ -127,29 +134,40 @@ function render(card, index){
 
 canvas.addEventListener('click', function() {
   if(cardDeck.length > 0 && handCards.length === 0){
-    drawCards();
-  }else{
-    discardCards();
+    drawCards(cardDeck, handCards);
+  }else if(handCards.length > 0 && canDiscard(handCards)){
+    discardCards(handCards, discardStack);
   }
 }, false);
 
-function discardCards(){
-  for(let ii = 0; ii < handCards.length; ii++){
-    if(!handCards[ii].isAtDestination() || !handCards[ii].flipped){
-      return;
+function canDiscard(cards){
+  for(let ii = 0; ii < cards.length; ii++){
+    if(!cards[ii].isAtDestination() || !cards[ii].flipped){
+      return false;
     }
   }
-  handCards.length = 0;
+  return true;
 }
 
-function drawCards(){
+function discardCards(hand, discarded){
+  while(hand.length > 0){
+    const card = hand.pop();
+    discarded.push(card);
+    setTimeout(() => { 
+      card.discarding = true;
+      card.setDestination(2600+discarded.length, 100-discarded.length);
+    }, 100);
+  }
+}
+
+function drawCards(deck, hand){
   let ii = 0;
-  while(cardDeck.length > 0 && ii < 5){
-    handCards.push(cardDeck.pop());
+  while(deck.length > 0 && ii < 5){
+    hand.push(deck.pop());
     ii++;
   }
   
-  handCards.forEach((element, index) => {
+  hand.forEach((element, index) => {
     setTimeout(() => { 
       element.movingToHand = true;
       element.setDestination(600+(index*420), 900);
@@ -168,14 +186,22 @@ function animate(){
   cardDeck.forEach(element => element.drawBack());
 
   handCards.forEach((element) =>{
+    if(!element.isAtDestination()){
+      element.moveToDestination();
+    }
+
     if(!element.isAtDestination() && !element.flipped){
       element.drawBack();
-      element.moveToDestination();
     }else if(element.isAtDestination() && element.movingToHand && !element.flipped){  
       element.flip();
-    }else if(element.isAtDestination() && element.flipped){
+    }else if(element.flipped){
       element.drawFront();
     }
+  });
+
+  discardStack.forEach((element) => {
+    element.drawFront(); 
+    element.moveToDestination()
   });
 
   ctx.scale(2,2);
