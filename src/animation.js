@@ -105,11 +105,16 @@ class Card{
 }
 
 const allCards = [];
+const doneRendered = [];
 const cardDeck = [];
 const handCards = [];
 const discardStack =[];
 
 function createCards(){
+  ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+  ctx.font = "30px Arial";
+  ctx.fillText("Rendering Cards...",50,50);
+  
   const container = document.getElementsByClassName("container")[0];
   for (let item of container.children) {
     allCards.push(item);
@@ -119,7 +124,25 @@ function createCards(){
     render(allCards[ii]);
   }
 
-  start();
+  const interval = setInterval(()=>{
+    if(allCards.length === doneRendered.length){
+      clearInterval(interval);
+      shuffle(doneRendered).forEach((element, index)=>{
+        cardDeck.push(new Card(ctx, 200-index, 300-index, element.front, element.back));
+      });
+      doneRendered.length = 0;
+      start();
+    }
+  }, 1000)
+}
+
+function shuffle(array) {
+  for (let ii = array.length - 1; ii > 0; ii--) {
+      const rnd = Math.floor(Math.random() * (ii + 1));
+      [array[ii], array[rnd]] = [array[rnd], array[ii]];
+  }
+
+  return array;
 }
 
 function render(card){
@@ -130,8 +153,10 @@ function render(card){
   }).then((canvas)=> {
     const front = canvas.toDataURL("image/jpeg", 1.0);
     const back = "assets/cardback.png";
-    const length = cardDeck.length + 1;
-    cardDeck.push(new Card(ctx, 200-length, 300-length, front, back));
+    doneRendered.push({
+      front:front,
+      back:back,
+    });
   });
 }
 
@@ -186,13 +211,8 @@ function start(){
 
 function animate(){
   ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
-  if(discardStack.length < 1 && cardDeck.length < 1){
-    ctx.font = "30px Arial";
-    ctx.fillText("Rendering Cards...",50,50);
-  }else{
-    ctx.font = "30px Arial";
-    ctx.fillText("Ready Click for Stuff to happen!",50,50);
-  }
+  ctx.font = "30px Arial";
+  ctx.fillText("Ready Click for Stuff to happen!",50,50);
   ctx.scale(.5,.5);
 
   
