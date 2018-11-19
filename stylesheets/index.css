@@ -1,6 +1,6 @@
 body {
     background-color: #23272A;
-    /*overflow: hidden;*/
+    overflow: hidden;
 }
 
 .html2canvas-container {
@@ -11,6 +11,12 @@ body {
 #canvas{
     border:1px solid red;
     background-color: rgb(47, 51, 54);
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2%;
+    display: block;
 }
 
 div{

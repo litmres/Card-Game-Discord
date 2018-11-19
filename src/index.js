@@ -7,7 +7,7 @@ socket.addEventListener('open', function(event) {
     const canvas=document.getElementById("canvas");
     const ctx=canvas.getContext("2d");
     ctx.font = "30px Arial";
-    ctx.fillText("Waiting for Cards to Load...",20,50);
+    ctx.fillText("Waiting for Cards to Load...",50,50);
 });
 socket.addEventListener('close', function(event) {
     console.log("disconnected...");
