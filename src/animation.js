@@ -1,7 +1,15 @@
+"use strict"
+
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
 const cw=canvas.width;
 const ch=canvas.height;
+
+const allCards = [];
+const doneRendered = [];
+const cardDeck = [];
+const handCards = [];
+const discardStack =[];
 
 class Card{
   constructor(ctx, startX, startY, frontImage, backImage){
@@ -104,12 +112,6 @@ class Card{
   }
 }
 
-const allCards = [];
-const doneRendered = [];
-const cardDeck = [];
-const handCards = [];
-const discardStack =[];
-
 function createCards(){
   ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
   ctx.font = "30px Arial";
@@ -133,7 +135,7 @@ function createCards(){
       doneRendered.length = 0;
       start();
     }
-  }, 1000)
+  }, 1000);
 }
 
 function shuffle(array) {
@@ -214,8 +216,6 @@ function animate(){
   ctx.font = "30px Arial";
   ctx.fillText("Ready Click for Stuff to happen!",50,50);
   ctx.scale(.5,.5);
-
-  
   
   cardDeck.forEach(element => element.drawBack());
 

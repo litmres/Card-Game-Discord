@@ -17,6 +17,7 @@ body {
     margin-right: auto;
     margin-top: 2%;
     display: block;
+    visibility: hidden;
 }
 
 div{
@@ -25,8 +26,35 @@ div{
     text-align: center;
 }
 
+.option{
+    top: 50%;
+    left: 50%;
+    width:30em;
+    margin-top: -9em;
+    margin-left: -15em;
+    background-color: rgb(47, 51, 54);
+    position:fixed;
+    font: bold 30px arial, sans-serif;
+    color:white;
+}
+
+.canvas-option{
+    border:1px solid rgb(60, 60, 212);
+}
+
+.canvas-option:hover, .cards-option:hover{
+    border:1px solid rgb(234, 236, 104);
+    background: #2C2F33;
+    color:rgb(243, 243, 166);
+    cursor: pointer;
+}
+
+.cards-option{
+    border:1px solid rgb(84, 218, 84);
+}
+
 .container{
-    /*visibility: hidden;*/
+    visibility: hidden;
 }
 
 .card-container{

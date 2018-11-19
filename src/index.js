@@ -4,10 +4,6 @@ const socket = new WebSocket('wss://get-members.herokuapp.com');
 socket.addEventListener('open', function(event) {
     console.log("connected succesfully");
     socket.send("ass");
-    const canvas=document.getElementById("canvas");
-    const ctx=canvas.getContext("2d");
-    ctx.font = "30px Arial";
-    ctx.fillText("Waiting for Cards to Load...",50,50);
 });
 socket.addEventListener('close', function(event) {
     console.log("disconnected...");
@@ -31,8 +27,6 @@ socket.addEventListener('message', function(event) {
             level: 8,
         });
     });
-
-    createCards();
 });
 
 function createCard(user){
@@ -98,4 +92,38 @@ function createCard(user){
     card.appendChild(defenseContainer);
 
     container.appendChild(card);
+}
+
+function chosenOption(num){
+    const option = document.getElementById("option");
+    option.style.visibility = "hidden";
+    option.style.display = "none";
+
+    if(!num){
+        const canvas=document.getElementById("canvas");
+        canvas.style.visibility = "visible";
+        const ctx=canvas.getContext("2d");
+        ctx.font = "30px Arial";
+        ctx.fillText("Waiting for Cards to Load...",50,50);
+
+        const container = document.getElementsByClassName("container")[0];
+        container.style.visibility = "visible";
+
+        const interval = setInterval(()=>{
+            const container = document.getElementsByClassName("container")[0];
+            if(container.children.length > 1){
+                clearInterval(interval);
+                createCards();
+            }
+        }, 500);
+    }else{
+        const canvas=document.getElementById("canvas");
+        canvas.style.visibility = "visible";
+        canvas.style.display = "none";
+
+        const container = document.getElementsByClassName("container")[0];
+        container.style.visibility = "visible";
+
+        document.body.style.overflow = "auto";
+    }
 }

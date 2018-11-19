@@ -10,6 +10,18 @@
 <link rel="stylesheet" type="text/css" href="stylesheets/index.css">
 
 <body>
+    <div class="option" id="option">
+        <div class="canvas-option" onclick="chosenOption(0)">
+            Click here for canvas representation
+            (fancy stuff may take long to load)
+        </div>
+        <br>
+        <br>
+        <div class="cards-option" onclick="chosenOption(1)">
+            Click here to just see the cards
+            (no fancy stuff loads quicker)
+        </div>
+    </div>
     <canvas id="canvas" width="1800" height="900"></canvas>
     <div class="container">
         <div class="card-container">
