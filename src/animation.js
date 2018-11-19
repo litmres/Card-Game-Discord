@@ -114,13 +114,13 @@ async function createCards(){
   }
   
   for(let ii = 0; ii < allCards.length; ii++){
-    render(allCards[ii], ii);
+    render(allCards[ii]);
   }
 
   start();
 }
 
-function render(card, index){
+function render(card){
   html2canvas(card, {
     allowTaint : false, 
     useCORS: true,
@@ -128,7 +128,8 @@ function render(card, index){
   }).then((canvas)=> {
     const front = canvas.toDataURL("image/jpeg", 1.0);
     const back = "assets/cardback.png";
-    cardDeck.push(new Card(ctx, 100-index, 150-index, front, back));
+    const length = cardDeck.length + 1;
+    cardDeck.push(new Card(ctx, 100-length, 150-length, front, back));
   });
 }
 
