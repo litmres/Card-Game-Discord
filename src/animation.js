@@ -21,10 +21,13 @@ class Card{
     this.front=new Image();
     this.back=new Image();
     this.front.src=frontImage;
+    this.frontWidth = 400;
+    this.frontHeight = 563;
     this.back.src=backImage;
     this.movingToHand = false;
     this.flipped = false;
     this.discarding = false;
+    this.magnitude = 40;
   }
 
   isAtDestination(){
@@ -44,9 +47,8 @@ class Card{
     const dx = this.dx - this.x;
     const dy = this.dy - this.y;
     const angle = Math.atan2(dy, dx);
-    const magnitude = 40;
-    this.velX = Math.cos(angle) * magnitude;
-    this.velY = Math.sin(angle) * magnitude;
+    this.velX = Math.cos(angle) * this.magnitude;
+    this.velY = Math.sin(angle) * this.magnitude;
   }
 
   getDistance(x, dx, y, dy){
@@ -69,7 +71,7 @@ class Card{
   }
 
   drawFront(){
-    this.ctx.drawImage(this.front, this.x, this.y);
+    this.ctx.drawImage(this.front, this.x, this.y, this.frontWidth, this.frontHeight);
   }
 
   drawBack(){
@@ -77,14 +79,14 @@ class Card{
   }
 
   flip(){
-    this.ctx.translate(this.x,this.y);
+    this.ctx.translate(this.x+(this.frontWidth/2),this.y+(this.frontHeight/2));
     //ctx.rotate(angle);
     this.ctx.scale(this.scaleX/100,1);
 
     if(this.scaleX>=0){
-      this.ctx.drawImage(this.front, -this.back.width/2, -this.y+900);
+      this.ctx.drawImage(this.back, -this.back.width/2, -this.back.height/2);
     }else{
-      this.ctx.drawImage(this.back, -this.back.width/2, -this.y+900);
+      this.ctx.drawImage(this.front, -this.back.width/2, -this.back.height/2, this.frontWidth, this.frontHeight);
     }
 
     this.ctx.setTransform(.5,0,0,.5,0,0);
@@ -107,7 +109,7 @@ const cardDeck = [];
 const handCards = [];
 const discardStack =[];
 
-async function createCards(){
+function createCards(){
   const container = document.getElementsByClassName("container")[0];
   for (let item of container.children) {
     allCards.push(item);
@@ -151,13 +153,15 @@ function canDiscard(cards){
 }
 
 function discardCards(hand, discarded){
+  let ii = hand.length;
   while(hand.length > 0){
     const card = hand.pop();
     discarded.push(card);
     setTimeout(() => { 
       card.discarding = true;
       card.setDestination(2600+discarded.length, 100-discarded.length);
-    }, 100);
+    }, 100*ii);
+    ii--;
   }
 }
 
