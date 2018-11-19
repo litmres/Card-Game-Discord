@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const tokens = require('./tokens.json');
 const client = new Discord.Client();
 
 client.on('ready', () => {
@@ -9,10 +10,10 @@ client.login(tokens.discord.token);
 
 function respond(user){
 	const array = [];
-	client.guilds.get().members.forEach(member=> array.push({
+	client.guilds.forEach(guild => guild.members.forEach(member => array.push({
         name: member.user.username,
         image: member.user.avatarURL,
-    }));
+    })));
 	sendDataToClient(user, array);
 }
 
@@ -59,5 +60,6 @@ function getDateTime() {
 }
 
 function sendDataToClient(user, data){
+	console.log("sending", data)
     user.socket.send(JSON.stringify(data));
 }
