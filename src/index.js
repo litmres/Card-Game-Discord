@@ -18,16 +18,22 @@ socket.addEventListener('message', function(event) {
         container.removeChild(container.firstChild);
     }
     members.forEach(element => {
+        const attack = rndNumBetween(1, 15);
+        const defense = rndNumBetween(1, 15);
         createCard({
             name: element.name,
             image: element.image,
-            attack: 5,
-            defense: 13,
+            attack: attack,
+            defense: defense,
             description:"skefj slkfj asdlkf jsdaf",
-            level: 8,
+            level: Math.floor((attack+defense)/2),
         });
     });
 });
+
+function rndNumBetween(min,max){
+    return Math.floor(Math.random()*(max-min+1)+min);
+}
 
 function createCard(user){
 	const container = document.getElementsByClassName("container")[0];
