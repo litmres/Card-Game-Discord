@@ -152,7 +152,7 @@ function shuffle(array) {
 function render(card){
 
   domtoimage.toPng(card, {
-    width:170,
+    width:190,
     height:300,
     })
     .then((dataUrl)=>{
@@ -208,7 +208,7 @@ function drawCards(deck, hand){
   hand.forEach((element, index) => {
     setTimeout(() => { 
       element.movingToHand = true;
-      element.setDestination(700+(index*element.frontWidth-400), 1100);
+      element.setDestination(700+(index*element.frontWidth), 1100);
     }, index*300);
   });
 }
