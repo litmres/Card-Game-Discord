@@ -96,7 +96,7 @@ class Card{
     if(this.scaleX>=0){
       this.ctx.drawImage(this.back, -this.back.width/2, -this.back.height/2);
     }else{
-      this.ctx.drawImage(this.front, -this.back.width/2, -this.back.height/2, this.frontWidth, this.frontHeight);
+      this.ctx.drawImage(this.front, (this.front.width-this.frontWidth)/1.2, (this.front.height-this.frontHeight)/1.2, this.frontWidth, this.frontHeight);
     }
 
     this.ctx.setTransform(.5,0,0,.5,0,0);

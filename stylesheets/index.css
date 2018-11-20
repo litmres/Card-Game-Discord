@@ -61,7 +61,7 @@ div{
 }
 
 .screenshot-container{
-    margin:20px;
+    margin:30px;
     position:relative;
     float:left;
     width: 160px;
@@ -94,27 +94,30 @@ div{
 .user-image{
     width: 100%;
     height: 150px;
-    background-color: rgb(122, 16, 16);
+    background-color: rgb(47, 51, 54);
     margin-top: -35px;
     -webkit-clip-path: ellipse(50% 35% at 50% 35%);
     clip-path: ellipse(50% 35% at 50% 35%);
+    border:0;
 }
 
 .user-image2{
     width: 92.3%;
     height: 150px;
-    background-color: rgb(122, 16, 16);
+    background-color: rgb(47, 51, 54);
     margin-top: -35px;
     -webkit-clip-path: polygon(0 35%, 100% 35%, 100% 100%, 0% 100%);
     clip-path: polygon(0 35%, 100% 35%, 100% 100%, 0% 100%);
     position:absolute;
     top:17;
     left:5;
+    border:0;
 }
 
 .name-container{
     margin-left:-7px;
     width:100%;
+    height:20px;
     border: 2px solid rgb(142, 209, 153);
     background-color: rgb(150, 160, 115);
     border-radius: 10%;
@@ -123,18 +126,20 @@ div{
     -webkit-transform: skew(0deg, 20deg);
     margin-top:-25px;
     color:black;
-    -webkit-text-stroke: 0.1px white;
+    /*-webkit-text-stroke: 0.1px white;*/
 }
 
 .text-container{
     margin-top:-5px;
+    margin-left:0px;
     border: 2px solid rgb(112, 31, 72);
     background-color: rgb(139, 136, 136);
-    height: 25%;
+    width:107px;
+    height: 50px;
     padding:5px;
     top:50%;
     color:black;
-    -webkit-text-stroke: 0.1px white;
+    /*-webkit-text-stroke: 0.1px white;*/
 }
 
 .attack-image{

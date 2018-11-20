@@ -23,7 +23,7 @@ socket.addEventListener('message', function(event) {
             image: element.image,
             attack: 5,
             defense: 13,
-            description:"sadl skladfj lsdkfj skefj slkfj asdlkf jsdaf",
+            description:"skefj slkfj asdlkf jsdaf",
             level: 8,
         });
     });
