@@ -31,8 +31,8 @@ class Card{
     this.front=new Image();
     this.back=new Image();
     this.front.src=frontImage;
-    this.frontWidth = 400;
-    this.frontHeight = 563;
+    this.frontWidth = 400*1.3;
+    this.frontHeight = 563*1.3;
     this.back.src=backImage;
     this.movingToHand = false;
     this.flipped = false;
@@ -150,18 +150,22 @@ function shuffle(array) {
 }
 
 function render(card){
-  html2canvas(card, {
-    allowTaint : false, 
-    useCORS: true,
-    scale: 2.5,
-  }).then((canvas)=> {
-    const front = canvas.toDataURL("image/jpeg", 1.0);
-    const back = "assets/cardback.png";
-    doneRendered.push({
-      front:front,
-      back:back,
+
+  domtoimage.toPng(card, {
+    width:170,
+    height:300,
+    })
+    .then((dataUrl)=>{
+      const front = dataUrl;
+      const back = "assets/cardback.png";
+      doneRendered.push({
+        front:front,
+        back:back,
+      });
+    })
+    .catch(function (error) {
+        console.error('oops, something went wrong!', error);
     });
-  });
 }
 
 canvas.addEventListener('click', function() {
@@ -204,7 +208,7 @@ function drawCards(deck, hand){
   hand.forEach((element, index) => {
     setTimeout(() => { 
       element.movingToHand = true;
-      element.setDestination(700+(index*420), 1100);
+      element.setDestination(700+(index*element.frontWidth-400), 1100);
     }, index*300);
   });
 }
