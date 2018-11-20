@@ -31,7 +31,10 @@ socket.addEventListener('message', function(event) {
 
 function createCard(user){
 	const container = document.getElementsByClassName("container")[0];
-	
+    
+    const shot = document.createElement("div");
+    shot.setAttribute("class", "screenshot-container");
+
     const card = document.createElement("div");
     card.setAttribute("class", "card-container");
 
@@ -91,7 +94,9 @@ function createCard(user){
     card.appendChild(attackContainer);
     card.appendChild(defenseContainer);
 
-    container.appendChild(card);
+    shot.appendChild(card);
+
+    container.appendChild(shot);
 }
 
 function chosenOption(num){
