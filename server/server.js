@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
 const tokens = require('./tokens.json');
-const fs = require('fs');
 const bot = new Discord.Client();
 const MongoClient = require('mongodb').MongoClient;
 
@@ -55,9 +54,7 @@ function getAllDocuments(db){
     });
 }
 
-function getCollectionObj(db){
-    getAllDocuments(db);
-
+function getCollectionObj(){
     return collectionObj;
 }
 
@@ -68,7 +65,7 @@ bot.on('ready', () => {
 bot.on("message", msg => {
     if (msg.author.bot) return;
     
-    const points = getCollectionObj(connectedDB);
+    const points = getCollectionObj();
     console.log("opening:", points);
 	
 	
@@ -172,7 +169,7 @@ function calcUserExp(length, amount){
 
 function respond(client){
 	const array = [];
-    const points = getCollectionObj(connectedDB);
+    const points = getCollectionObj();
     console.log("reading json:", points);
 	bot.guilds.forEach(guild => guild.members.forEach((member) =>{
 		let user = points[member.user.id];
