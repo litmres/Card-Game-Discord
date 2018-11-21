@@ -2,6 +2,64 @@ const Discord = require('discord.js');
 const tokens = require('./tokens.json');
 const fs = require('fs');
 const bot = new Discord.Client();
+const MongoClient = require('mongodb').MongoClient;
+
+let collectionObj = {};
+
+const url = tokens.mongoDB.url.replace("<PASSWORD>", tokens.mongoDB.password);
+
+const dbName = tokens.mongoDB.name;
+
+let connectedDB;
+
+MongoClient.connect(url, function(err, client) {
+    if(err) {
+        console.log('Error occurred while connecting to MongoDB Atlas...\n',err);
+    }
+    console.log("Connected successfully to db");
+
+    connectedDB = client.db(dbName);
+
+    insertDocuments(connectedDB, function() {
+
+    });
+
+    getAllDocuments(connectedDB);
+});
+
+function insertDocuments(db, callback) {
+    const collection = db.collection('documents');
+
+    collection.insertOne({_id:'discordMembers'}).catch();
+};
+
+function updateDocuments(db, obj, name, callback) {
+    const collection = db.collection('documents');
+    collection.update({_id:'discordMembers'},{$set:{[name]:obj}},{upsert:true}).catch()
+};
+
+function getAllDocuments(db){
+    collectionObj = {};
+    const collection = db.collection('documents');
+
+    collection.findOne({}, function(err, result) {
+        if(err){
+            console.log(err);
+        }
+        for(key in result){
+            if(key !== "_id"){
+                collectionObj[key] = result[key];
+            }
+        }
+        console.log("updated collectionObj");
+    });
+}
+
+function getCollectionObj(db){
+    getAllDocuments(db);
+
+    return collectionObj;
+}
 
 bot.on('ready', () => {
   console.log(`Discord bot Logged in as ${bot.user.tag}!`);
@@ -9,16 +67,19 @@ bot.on('ready', () => {
 
 bot.on("message", msg => {
     if (msg.author.bot) return;
-	const points = JSON.parse(fs.readFileSync('levelcount.json', 'utf8'));
-	let user = points[msg.author.id];
-	const oneMin = 1000 * 60 * 1;
+    
+    const points = getCollectionObj(connectedDB);
+    console.log("opening:", points);
+	
 	
 	if (!points[msg.author.id]) {
         points[msg.author.id] = newUser();
 		console.log("created new user");
     }
-	
-	if(timePast(points[msg.author.id].timeOfLastUpdate, oneMin)){
+    
+    const timeOut = 1000 * 60 * 0.5;
+	if(timePast(points[msg.author.id].timeOfLastUpdate, timeOut)){
+        console.log("updating user");
 		addExp(msg.content, points[msg.author.id]);
 		levelUp(points[msg.author.id]);
 	}
@@ -35,8 +96,8 @@ bot.on("message", msg => {
 		console.log("set description");
 	}
 	
-	const json = JSON.stringify(points, null, "\t");
-    fs.writeFileSync('levelcount.json', json, 'utf8');
+    console.log("saving file:", points[msg.author.id]);
+    updateDocuments(connectedDB, points[msg.author.id], msg.author.id);
 	
 	if (!msg.content.startsWith(prefix)) return;
 	
@@ -97,8 +158,8 @@ function levelUp(user){
     }
 }
 
-function timePast(pastTime, time){
-	return (new Date().getTime() - pastTime < time)?false:true;
+function timePast(pastTime, timeOut){
+	return (new Date().getTime() - pastTime < timeOut)?false:true;
 }
 
 function rndNumBetween(min,max){
@@ -111,11 +172,13 @@ function calcUserExp(length, amount){
 
 function respond(client){
 	const array = [];
-	const points = JSON.parse(fs.readFileSync('levelcount.json', 'utf8'));
+    const points = getCollectionObj(connectedDB);
+    console.log("reading json:", points);
 	bot.guilds.forEach(guild => guild.members.forEach((member) =>{
 		let user = points[member.user.id];
 		if(!user){
-			user = newUser();
+            user = newUser();
+            console.log("creating dummy user");
 		}
 		array.push({
         name: member.user.username,

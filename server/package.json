@@ -1,21 +1,22 @@
 {
-    "name": "get-members",
-    "version": "1.0.0",
-    "description": "server to member request",
-    "main": "server.js",
-    "dependencies": {
-      "discord.js": "^11.4.2",
-      "ws": "^6.0.0"
-    },
-    "devDependencies": {},
-    "scripts": {
-      "test": "npm test",
-      "start": "node server.js"
-    },
-    "keywords": [
-      "get",
-      "members"
-    ],
-    "author": "twofist",
-    "license": "MIT"
-  }
+  "name": "get-members",
+  "version": "1.0.0",
+  "description": "server to member request",
+  "main": "server.js",
+  "dependencies": {
+    "discord.js": "^11.4.2",
+    "mongodb": "^3.1.10",
+    "ws": "^6.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "npm test",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "get",
+    "members"
+  ],
+  "author": "twofist",
+  "license": "MIT"
+}
