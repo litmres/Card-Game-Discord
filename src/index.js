@@ -17,6 +17,7 @@ socket.addEventListener('message', function(event) {
     while (container.firstChild) {
         container.removeChild(container.firstChild);
     }
+	
     members.forEach(element => {
         createCard({
             name: element.name,
@@ -45,6 +46,12 @@ function createCard(user){
     const level = document.createElement("div");
     level.setAttribute("class", "level-container");
     level.appendChild(document.createTextNode(user.level));
+	
+	const userImageBorder = document.createElement("div");
+    userImageBorder.setAttribute("class", "user-image-border");
+
+    const userImage2Border = document.createElement("div");
+    userImage2Border.setAttribute("class", "user-image2-border");
 
     const userImage = document.createElement("img");
     userImage.setAttribute("class", "user-image");
@@ -91,6 +98,8 @@ function createCard(user){
     defenseContainer.appendChild(defenseText);
 
     card.appendChild(level);
+	card.appendChild(userImageBorder);
+    card.appendChild(userImage2Border);
     card.appendChild(userImage);
     card.appendChild(userImage2);
     card.appendChild(name);
