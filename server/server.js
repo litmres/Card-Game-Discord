@@ -73,6 +73,9 @@ bot.on("message", msg => {
         points[msg.author.id] = newUser(member.author.username, member.author.avatarURL);
 		console.log("created new user");
     }
+
+    points[msg.author.id].name = member.author.username;
+    points[msg.author.id].image = member.author.avatarURL;
     
     const timeOut = 1000 * 60 * 0.5;
 	if(timePast(points[msg.author.id].timeOfLastUpdate, timeOut)){
