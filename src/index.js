@@ -68,6 +68,7 @@ function receivedAllCards(data){
     }
 	
     members.forEach(element => {
+        element.image = "https://cdn.discordapp.com/avatars/93872440244969472/f977f194d987d21a6adbc6ec8423c1a9.webp";
         createCard({
             name: element.name,
             image: element.image,
@@ -80,12 +81,12 @@ function receivedAllCards(data){
 }
 
 function temporary(){
-    socket.send(TYPE.MSG_SEND_JOIN_QUEUE);
+    //socket.send(TYPE.MSG_SEND_JOIN_QUEUE);
 }
 
 function temporary2(){
     //socket.send(TYPE.MSG_SEND_SURRENDER);
-    socket.send(TYPE.MSG_SEND_END_TURN);
+    //socket.send(TYPE.MSG_SEND_END_TURN);
 }
 
 function extractType(string){
