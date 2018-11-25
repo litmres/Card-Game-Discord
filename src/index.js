@@ -1,9 +1,32 @@
 "use strict";
-const socket = new WebSocket('wss://get-members.herokuapp.com');
+
+const TYPE = {
+    MSG_SEND_USERNAME: 			        1,
+    MSG_SEND_GET_ALL_CARDS:             2,
+    MSG_SEND_CONNECTED: 			    3,
+    MSG_SEND_DISCONNECTED: 		        4,
+    MSG_SEND_JOIN_QUEUE:                5,
+    MSG_SEND_LEAVE_QUEUE:               6,
+    MSG_SEND_SURRENDER:                 7,
+    MSG_SEND_END_TURN: 	                8,
+    MSG_SEND_PLAY_CARDS:                9,
+    SPLITTER:                           "-->",
+    MSG_RECEIVE_MATCH_START:	        20,
+    MSG_RECEIVE_TURN_START:	            21,
+    MSG_RECEIVE_DRAW_CARDS:           	22,
+    MSG_RECEIVE_DISCARD_CARDS:        	23,
+    MSG_RECEIVE_PLAY_CARDS:           	24,
+    MSG_RECEIVE_DEAD_CARDS:           	25,
+    MSG_RECEIVE_ONLINE_USERS:           26,
+    MSG_RECEIVE_ALL_CARDS:  		    27,
+};
+
+const socket = new WebSocket('ws://localhost:9091');
 
 socket.addEventListener('open', function(event) {
     console.log("connected succesfully");
-    socket.send("ass");
+    socket.send(TYPE.MSG_SEND_CONNECTED);
+    socket.send(TYPE.MSG_SEND_GET_ALL_CARDS);
 });
 socket.addEventListener('close', function(event) {
     console.log("disconnected...");
@@ -12,7 +35,33 @@ socket.addEventListener('error', function(event) {
     console.log("an error has occured!");
 });
 socket.addEventListener('message', function(event) {
-    const members = JSON.parse(event.data);
+    const type = parseInt(extractType(event.data));
+    switch(type){
+        case TYPE.MSG_RECEIVE_ONLINE_USERS: temporary();
+        break;
+        case TYPE.MSG_RECEIVE_DRAW_CARDS: temporary2();
+        break;
+        case TYPE.MSG_RECEIVE_USERNAME: 0;
+        break;
+        case TYPE.MSG_RECEIVE_DISCONNECTED: userDisconnected(ONLINEUSERS, user);
+        break;
+        case TYPE.MSG_RECEIVE_LEAVE_QUEUE: userLeavesQueue(QUEUE, user);
+        break;
+        case TYPE.MSG_RECEIVE_SURRENDER: userSurrenders(user);
+        break;
+        case TYPE.MSG_RECEIVE_END_TURN: userEndsTurn(user, ROOMS);
+        break;
+        case TYPE.MSG_RECEIVE_PLAY_CARDS: userPlaysCards(user, event.data);
+        break;
+        case TYPE.MSG_RECEIVE_ALL_CARDS: receivedAllCards(event.data);
+        break;
+        default: console.log("type not found", event.data);
+    }
+});
+
+function receivedAllCards(data){
+    const members = extractValue(data);
+
     const container = document.getElementsByClassName("container")[0];
     while (container.firstChild) {
         container.removeChild(container.firstChild);
@@ -28,7 +77,24 @@ socket.addEventListener('message', function(event) {
             level: element.level,
         });
     });
-});
+}
+
+function temporary(){
+    socket.send(TYPE.MSG_SEND_JOIN_QUEUE);
+}
+
+function temporary2(){
+    //socket.send(TYPE.MSG_SEND_SURRENDER);
+    socket.send(TYPE.MSG_SEND_END_TURN);
+}
+
+function extractType(string){
+    return string.split(TYPE.SPLITTER)[0];
+}
+
+function extractValue(string){
+    return JSON.parse(string.split(TYPE.SPLITTER)[1]);
+}
 
 function rndNumBetween(min,max){
     return Math.floor(Math.random()*(max-min+1)+min);
