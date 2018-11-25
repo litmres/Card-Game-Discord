@@ -70,7 +70,7 @@ bot.on("message", msg => {
 	
 	
 	if (!points[msg.author.id]) {
-        points[msg.author.id] = newUser();
+        points[msg.author.id] = newUser(member.author.username, member.author.avatarURL);
 		console.log("created new user");
     }
     
@@ -117,8 +117,10 @@ bot.on("message", msg => {
 
 bot.login(tokens.discord.token);
 
-function newUser(){
+function newUser(name, url){
 	return {
+			name: name,
+			image: url,
             exp: 0,
             exptotal: 0,
             level: 1,
@@ -174,7 +176,7 @@ function respond(client){
 	bot.guilds.forEach(guild => guild.members.forEach((member) =>{
 		let user = points[member.user.id];
 		if(!user){
-            user = newUser();
+            user = newUser(member.user.username, member.user.avatarURL);
             console.log("creating dummy user");
 		}
 		array.push({
