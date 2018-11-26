@@ -10,10 +10,10 @@ class Player{
       this.cardWidth = 500;
       this.cardHeight = 700;
       this.mustPlay = 1;
-      this.playField = new PlayField(this.ctx, 650, 800, this.cardWidth*5, this.cardHeight, "red", this.socket);
-      this.handField = new HandField(this.ctx, 650, 900+this.cardHeight, this.cardWidth*5, this.cardHeight, "red", this.socket);
-      this.deckField = new DeckField(this.ctx, 50, 800, this.cardWidth, this.cardHeight, "red", this.socket);
-      this.discardField = new DiscardField(this.ctx, 3250, 800, this.cardWidth, this.cardHeight, "red", this.socket);
+      this.playField = new PlayField(this.ctx, 650, 800, this.cardWidth*5, this.cardHeight, "blue", this.socket);
+      this.handField = new HandField(this.ctx, 650, 900+this.cardHeight, this.cardWidth*5, this.cardHeight, "blue", this.socket);
+      this.deckField = new DeckField(this.ctx, 50, 800, this.cardWidth, this.cardHeight, "blue", this.socket);
+      this.discardField = new DiscardField(this.ctx, 3250, 800, this.cardWidth, this.cardHeight, "blue", this.socket);
     }
     setEndTurn(turn){
 		this.endTurn = turn;
