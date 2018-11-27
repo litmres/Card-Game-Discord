@@ -68,6 +68,10 @@ class Player{
         //move cards from play to discard field
         //move cards from hand to discard field
     }
+    displayOnlineUsers(number){
+        ctx.font = "60px Arial";
+        ctx.fillText("Online Users:", number,0,0);
+    }
     sendToSocket(data){
         this.socket.send(data);
     }

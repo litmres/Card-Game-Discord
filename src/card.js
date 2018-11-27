@@ -1,5 +1,5 @@
 class Card{
-    constructor(ctx, startX = 0, startY = 0, frontImage, backImage){
+    constructor(ctx, startX = 0, startY = 0, frontImage, backImage, serverData){
       this.ctx = ctx;
       this.x=startX;
       this.y=startY;
@@ -23,6 +23,7 @@ class Card{
       this.flipped = false;
       this.discarding = false;
       this.magnitude = 40;
+      this.serverData = serverData;
     }
 
     setPosition(x,y){

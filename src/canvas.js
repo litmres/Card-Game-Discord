@@ -8,11 +8,11 @@ const cw=canvas.width;
 const ch=canvas.height;
 const gameScale = .5;
 
-const allCards = [];
-const doneRendered = [];
-const cardDeck = [];
-const handCards = [];
-const discardStack =[];
+const UNRENDEREDCARDS = [];
+const RENDEREDCARDS = [];
+//const cardDeck = [];
+//const handCards = [];
+//const discardStack =[];
 
 const opponent = new Opponent(ctx, 30, 0);
 const player = new Player(ctx, socket, 30);
@@ -25,23 +25,25 @@ function createCards(){
   
   const container = document.getElementsByClassName("container")[0];
   for (let item of container.children) {
-    allCards.push(item);
+    UNRENDEREDCARDS.push(item);
   }
   
-  for(let ii = 0; ii < allCards.length; ii++){
-    render(allCards[ii]);
+  for(let ii = 0; ii < UNRENDEREDCARDS.length; ii++){
+    render(UNRENDEREDCARDS[ii]);
   }
 
   const interval = setInterval(()=>{
-    if(allCards.length === doneRendered.length){
+    if(UNRENDEREDCARDS.length === RENDEREDCARDS.length){
       clearInterval(interval);
+      /*
       shuffle(doneRendered).forEach((element, index)=>{
         cardDeck.push(new Card(ctx, 200-index, 300-index, element.front, element.back));
       });
       doneRendered.length = 0;
+      */
       start();
     }
-  }, 1000);
+  }, 500);
 }
 
 function shuffle(array) {
@@ -54,17 +56,15 @@ function shuffle(array) {
 }
 
 function render(card){
-
   domtoimage.toPng(card, {
     width:190,
     height:300,
     })
     .then((dataUrl)=>{
-      const front = dataUrl;
-      const back = "assets/cardback.png";
-      doneRendered.push({
-        front:front,
-        back:back,
+      RENDEREDCARDS.push({
+        serverData: JSON.parse(card.textContent),
+        front:dataUrl,
+        back:"assets/cardback.png",
       });
     })
     .catch(function (error) {
@@ -176,10 +176,12 @@ canvas.addEventListener('click', function(evt) {
     surrenderButton.onClick();
   }
 
+  /*
   if(cardDeck.length > 0 && handCards.length === 0){
     drawCards(cardDeck, handCards);
   }else if(handCards.length > 0 && canDiscard(handCards)){
     discardCards(handCards, discardStack);
   }
+  */
 }, false);
 

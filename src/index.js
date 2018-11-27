@@ -36,30 +36,29 @@ socket.addEventListener('error', function(event) {
 });
 socket.addEventListener('message', function(event) {
     const type = parseInt(extractType(event.data));
+    const data = extractValue(event.data);
     switch(type){
-    case TYPE.MSG_RECEIVE_MATCH_START: player.matchStart();
+    case TYPE.MSG_RECEIVE_MATCH_START: player.matchStart(data);
     break;
-    case TYPE.MSG_RECEIVE_TURN_START: player.turnStart();
+    case TYPE.MSG_RECEIVE_TURN_START: player.turnStart(data);
     break;
-    case TYPE.MSG_RECEIVE_DRAW_CARDS: player.drawCards();
+    case TYPE.MSG_RECEIVE_DRAW_CARDS: player.drawCards(data);
     break;
-    case TYPE.MSG_RECEIVE_DISCARD_CARDS: player.discardCards();
+    case TYPE.MSG_RECEIVE_DISCARD_CARDS: player.discardCards(data);
     break;
-    case TYPE.MSG_RECEIVE_PLAY_CARDS: player.playCards();
+    case TYPE.MSG_RECEIVE_PLAY_CARDS: player.playCards(data);
     break;
-    case TYPE.MSG_RECEIVE_DEAD_CARDS: player.deadCards();
+    case TYPE.MSG_RECEIVE_DEAD_CARDS: player.deadCards(data);
     break;
-    case TYPE.MSG_RECEIVE_ONLINE_USERS: player.displayOnlineUsers();
+    case TYPE.MSG_RECEIVE_ONLINE_USERS: player.displayOnlineUsers(data);
     break;
-    case TYPE.MSG_RECEIVE_ALL_CARDS: receivedAllCards(event.data);
+    case TYPE.MSG_RECEIVE_ALL_CARDS: receivedAllCards(data);
     break;
         default: console.log("type not found", event.data);
     }
 });
 
-function receivedAllCards(data){
-    const members = extractValue(data);
-
+function receivedAllCards(members){
     const container = document.getElementsByClassName("container")[0];
     while (container.firstChild) {
         container.removeChild(container.firstChild);
@@ -67,14 +66,19 @@ function receivedAllCards(data){
 	
     members.forEach(element => {
         element.image = "https://cdn.discordapp.com/avatars/93872440244969472/f977f194d987d21a6adbc6ec8423c1a9.webp";
-        createCard({
-            name: element.name,
-            image: element.image,
+        const obj = {
             attack: element.attack,
             defense: element.defense,
-            description: element.description,
+            currentDefense: element.defense,
             level: element.level,
-        });
+            description: element.description,
+            image: element.image,
+            name: element.name,
+            id: element.id,
+            isSpecial: element.isSpecial,
+            position: element.position,
+        }
+        createCard(obj);
     });
 }
 
@@ -153,6 +157,9 @@ function createCard(user){
     defenseContainer.appendChild(defense);
     defenseContainer.appendChild(defenseText);
 
+    const hiddenData = document.createTextNode(user);
+
+    card.appendChild(hiddenData);
     card.appendChild(level);
 	card.appendChild(userImageBorder);
     card.appendChild(userImage2Border);
