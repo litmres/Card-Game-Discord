@@ -30,6 +30,26 @@ class Player{
     drawDiscardField(){
         this.discardField.draw();
     }
+    fillDeckCards(){
+        for(let ii = 0; ii < this.deckSize; ii++){
+            this.deckField.addCard(new Card(this.ctx, "assets/cardback.png", "assets/cardback.png"));
+        }
+    }
+    addHandCards(array){
+        array.forEach(element => {
+            this.handField.addCard(element, true, false);
+        });
+    }
+    addPlayCards(array){
+        array.forEach(element => {
+            this.handField.addCard(element, true, false);
+        });
+    }
+    addDiscardedCards(array){
+        array.forEach(element => {
+            this.handField.addCard(element);
+        });
+    }
     drawCards(){
 
     }

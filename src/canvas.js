@@ -16,6 +16,7 @@ const discardStack =[];
 
 const opponent = new Opponent(ctx, 30, 0);
 const player = new Player(ctx, socket, 30);
+player.fillDeckCards();
 const endTurnButton = new EndTurnButton(ctx, 3250, 400, 400, 200, "green", socket);
 endTurnButton.setText("End Turn");
 const queueButton = new QueueButton(ctx, 1750, 100, 400, 200, "yellow", socket);

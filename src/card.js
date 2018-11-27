@@ -1,5 +1,5 @@
 class Card{
-    constructor(ctx, startX, startY, frontImage, backImage){
+    constructor(ctx, startX = 0, startY = 0, frontImage, backImage){
       this.ctx = ctx;
       this.x=startX;
       this.y=startY;
@@ -23,6 +23,15 @@ class Card{
       this.flipped = false;
       this.discarding = false;
       this.magnitude = 40;
+    }
+
+    setPosition(x,y){
+      this.x = x;
+      this.y = y;
+    }
+
+    getCardWidth(){
+      return this.frontWidth;
     }
   
     isAtDestination(){
