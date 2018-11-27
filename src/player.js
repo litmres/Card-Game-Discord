@@ -1,7 +1,8 @@
 class Player{
-    constructor(socket, ctx, deckSize){
+    constructor(socket, ctx, deckSize, allCards){
       this.socket = socket;
       this.ctx = ctx;
+      this.allCards = allCards
       this.hand = [];
       this.discarded = [];
       this.deckSize = deckSize;
@@ -58,15 +59,37 @@ class Player{
             this.handField.addCard(element);
         });
     }
-    drawCards(){
+    drawCards(deck, hand){
         //move cards from deck to hand then flip
+        let ii = 0;
+        while(deck.length > 0 && ii < 5){
+            hand.push(deck.pop());
+            ii++;
+        }
+        
+        hand.forEach((element, index) => {
+            setTimeout(() => { 
+            element.movingToHand = true;
+            element.setDestination(700+(index*element.frontWidth), 1100);
+            }, index*300);
+        });
     }
     playCards(){
         //move cards from hand to play field
     }
-    discardCards(){
+    discardCards(hand, discarded){
         //move cards from play to discard field
         //move cards from hand to discard field
+        let ii = hand.length;
+        while(hand.length > 0){
+            const card = hand.pop();
+            discarded.push(card);
+            setTimeout(() => { 
+            card.discarding = true;
+            card.setDestination(cw*2-card.frontWidth+discarded.length-100, 300-discarded.length);
+            }, 100*ii);
+            ii--;
+        }
     }
     displayOnlineUsers(number){
         ctx.font = "60px Arial";

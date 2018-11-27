@@ -15,8 +15,7 @@ const RENDEREDCARDS = [];
 //const discardStack =[];
 
 const opponent = new Opponent(ctx, 30, 0);
-const player = new Player(ctx, socket, 30);
-player.fillDeckCards();
+const player = new Player(ctx, socket, 30, RENDEREDCARDS);
 
 function createCards(){
   ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
@@ -44,15 +43,6 @@ function createCards(){
       start();
     }
   }, 500);
-}
-
-function shuffle(array) {
-  for (let ii = array.length - 1; ii > 0; ii--) {
-      const rnd = Math.floor(Math.random() * (ii + 1));
-      [array[ii], array[rnd]] = [array[rnd], array[ii]];
-  }
-
-  return array;
 }
 
 function render(card){
@@ -110,6 +100,7 @@ function drawCards(deck, hand){
 }
 
 function start(){
+  player.fillDeckCards();
   animate();
 }
 
@@ -166,14 +157,14 @@ function isInside(pos, obj){
 
 canvas.addEventListener('click', function(evt) {
   const mousePos = getMousePos(canvas, evt, gameScale);
-	if (isInside(mousePos,endTurnButton)) {
-    endTurnButton.onClick();
+	if (isInside(mousePos, player.endTurnButton)) {
+    player.endTurnButton.onClick();
   }
-  if (isInside(mousePos,queueButton)) {
-    queueButton.onClick();
+  if (isInside(mousePos, player.queueButton)) {
+    player.queueButton.onClick();
   }
-  if (isInside(mousePos,surrenderButton)) {
-    surrenderButton.onClick();
+  if (isInside(mousePos, player.surrenderButton)) {
+    player.surrenderButton.onClick();
   }
 
   /*
