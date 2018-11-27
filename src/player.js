@@ -59,16 +59,14 @@ class Player{
         });
     }
     drawCards(){
-
+        //move cards from deck to hand then flip
     }
     playCards(){
-
+        //move cards from hand to play field
     }
     discardCards(){
-
-    }
-    isInBattle(){
-        return false;
+        //move cards from play to discard field
+        //move cards from hand to discard field
     }
     sendToSocket(data){
         this.socket.send(data);

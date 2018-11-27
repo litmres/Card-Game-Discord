@@ -13,22 +13,19 @@ class Opponent{
       this.discardField = new DiscardField(this.ctx, 3250, 800, this.cardWidth, this.cardHeight, "red", this.socket);
     }
     drawFields(){
-        if(!this.inBattle) return;
         this.playField.draw();
         this.handField.draw();
         this.deckField.draw();
         this.discardField.draw();
     }
     drawCards(){
-
+        //move cards from deck to hand then flip
     }
     playCards(){
-
+        //move cards from hand to play field
     }
     discardCards(){
-
-    }
-    isInBattle(){
-        return false;
+        //move cards from play to discard field
+        //move cards from hand to discard field
     }
 }

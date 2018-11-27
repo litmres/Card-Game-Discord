@@ -37,24 +37,22 @@ socket.addEventListener('error', function(event) {
 socket.addEventListener('message', function(event) {
     const type = parseInt(extractType(event.data));
     switch(type){
-        case TYPE.MSG_RECEIVE_ONLINE_USERS: temporary();
-        break;
-        case TYPE.MSG_RECEIVE_DRAW_CARDS: temporary2();
-        break;
-        case TYPE.MSG_RECEIVE_USERNAME: 0;
-        break;
-        case TYPE.MSG_RECEIVE_DISCONNECTED: userDisconnected(ONLINEUSERS, user);
-        break;
-        case TYPE.MSG_RECEIVE_LEAVE_QUEUE: userLeavesQueue(QUEUE, user);
-        break;
-        case TYPE.MSG_RECEIVE_SURRENDER: userSurrenders(user);
-        break;
-        case TYPE.MSG_RECEIVE_END_TURN: userEndsTurn(user, ROOMS);
-        break;
-        case TYPE.MSG_RECEIVE_PLAY_CARDS: userPlaysCards(user, event.data);
-        break;
-        case TYPE.MSG_RECEIVE_ALL_CARDS: receivedAllCards(event.data);
-        break;
+    case TYPE.MSG_RECEIVE_MATCH_START: player.matchStart();
+    break;
+    case TYPE.MSG_RECEIVE_TURN_START: player.turnStart();
+    break;
+    case TYPE.MSG_RECEIVE_DRAW_CARDS: player.drawCards();
+    break;
+    case TYPE.MSG_RECEIVE_DISCARD_CARDS: player.discardCards();
+    break;
+    case TYPE.MSG_RECEIVE_PLAY_CARDS: player.playCards();
+    break;
+    case TYPE.MSG_RECEIVE_DEAD_CARDS: player.deadCards();
+    break;
+    case TYPE.MSG_RECEIVE_ONLINE_USERS: player.displayOnlineUsers();
+    break;
+    case TYPE.MSG_RECEIVE_ALL_CARDS: receivedAllCards(event.data);
+    break;
         default: console.log("type not found", event.data);
     }
 });
@@ -78,15 +76,6 @@ function receivedAllCards(data){
             level: element.level,
         });
     });
-}
-
-function temporary(){
-    //socket.send(TYPE.MSG_SEND_JOIN_QUEUE);
-}
-
-function temporary2(){
-    //socket.send(TYPE.MSG_SEND_SURRENDER);
-    //socket.send(TYPE.MSG_SEND_END_TURN);
 }
 
 function extractType(string){
