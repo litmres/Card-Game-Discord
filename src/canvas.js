@@ -128,7 +128,7 @@ canvas.addEventListener('click', function(evt) {
 	if (isInside(mousePos, player.getEndTurnButton())) {
     player.getEndTurnButton().onClick();
   }
-  if (isInside(mousePos, player.queueButton())) {
+  if (isInside(mousePos, player.getQueueButton())) {
     player.getQueueButton().onClick();
   }
   if (isInside(mousePos, player.getSurrenderButton())) {

@@ -21,6 +21,15 @@ class Player{
       this.queueButton = new QueueButton(this.ctx, 1750, 100, 400, 200, "Join Queue", "yellow", this.socket);
       this.surrenderButton = new SurrenderButton(this.ctx, 3250, 100, 400, 200, "Surrender", "red", this.socket);
     }
+    getQueueButton(){
+        return this.queueButton;
+    }
+    getSurrenderButton(){
+        return this.surrenderButton;
+    }
+    getEndTurnButton(){
+        return this.endTurnButton;
+    }
     setEndTurn(turn){
 		this.endTurn = turn;
     }
