@@ -1,12 +1,12 @@
 class Button{
-    constructor(ctx, x, y, w, h, color, socket){
+    constructor(ctx, x, y, w, h, text, color, socket){
       this.width = w;
       this.height = h;
       this.x = x;
       this.y = y;
       this.ctx = ctx;
       this.socket = socket;
-      this.text = "Button";
+      this.text = text;
       this.color = color;
     }
     draw(){

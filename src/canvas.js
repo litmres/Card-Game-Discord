@@ -17,12 +17,6 @@ const discardStack =[];
 const opponent = new Opponent(ctx, 30, 0);
 const player = new Player(ctx, socket, 30);
 player.fillDeckCards();
-const endTurnButton = new EndTurnButton(ctx, 3250, 400, 400, 200, "green", socket);
-endTurnButton.setText("End Turn");
-const queueButton = new QueueButton(ctx, 1750, 100, 400, 200, "yellow", socket);
-queueButton.setText("Join Queue");
-const surrenderButton = new SurrenderButton(ctx, 3250, 100, 400, 200, "red", socket);
-surrenderButton.setText("Surrender");
 
 function createCards(){
   ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
@@ -126,23 +120,10 @@ function animate(){
 
   ctx.scale(gameScale,gameScale);
 
-  if(player.isInBattle()){
-    endTurnButton.draw();
-    surrenderButton.draw();
-  }else{
-    queueButton.draw();
-  }
-  
+  player.drawFields();
+  player.drawButtons();
 
-  player.drawDeckField();
-  player.drawHandField();
-  player.drawPlayField();
-  player.drawDiscardField();
-
-  opponent.drawDeckField();
-  opponent.drawHandField();
-  opponent.drawPlayField();
-  opponent.drawDiscardField();
+  opponent.drawFields();
   
   /*
   cardDeck.forEach(element => element.drawBack());

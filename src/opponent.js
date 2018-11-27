@@ -12,16 +12,11 @@ class Opponent{
       this.deckField = new DeckField(this.ctx, 50, 0, this.cardWidth, this.cardHeight, "red", this.socket);
       this.discardField = new DiscardField(this.ctx, 3250, 800, this.cardWidth, this.cardHeight, "red", this.socket);
     }
-    drawPlayField(){
+    drawFields(){
+        if(!this.inBattle) return;
         this.playField.draw();
-    }
-    drawHandField(){
         this.handField.draw();
-    }
-    drawDeckField(){
         this.deckField.draw();
-    }
-    drawDiscardField(){
         this.discardField.draw();
     }
     drawCards(){

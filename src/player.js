@@ -10,24 +10,32 @@ class Player{
       this.cardWidth = 500;
       this.cardHeight = 700;
       this.mustPlay = 1;
+      this.inBattle = false;
+      this.inQueue = false;
       this.playField = new PlayField(this.ctx, 650, 800, this.cardWidth*5, this.cardHeight, "blue", this.socket);
       this.handField = new HandField(this.ctx, 650, 900+this.cardHeight, this.cardWidth*5, this.cardHeight, "blue", this.socket);
       this.deckField = new DeckField(this.ctx, 50, 800, this.cardWidth, this.cardHeight, "blue", this.socket);
       this.discardField = new DiscardField(this.ctx, 3250, 800, this.cardWidth, this.cardHeight, "blue", this.socket);
+      this.endTurnButton = new EndTurnButton(this.ctx, 3250, 400, 400, 200, "End Turn", "green", this.socket);
+      this.queueButton = new QueueButton(this.ctx, 1750, 100, 400, 200, "Join Queue", "yellow", this.socket);
+      this.surrenderButton = new SurrenderButton(this.ctx, 3250, 100, 400, 200, "Surrender", "red", this.socket);
     }
     setEndTurn(turn){
 		this.endTurn = turn;
     }
-    drawPlayField(){
+    drawButtons(){
+        if(this.inBattle){
+            this.endTurnButton.draw();
+            this.surrenderButton.draw();
+        }else{
+            this.queueButton.draw(this.inQueue);
+        }
+    }
+    drawFields(){
+        if(!this.inBattle) return;
         this.playField.draw();
-    }
-    drawHandField(){
         this.handField.draw();
-    }
-    drawDeckField(){
         this.deckField.draw();
-    }
-    drawDiscardField(){
         this.discardField.draw();
     }
     fillDeckCards(){
