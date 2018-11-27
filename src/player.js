@@ -91,6 +91,13 @@ class Player{
             ii--;
         }
     }
+    matchStart(){
+        this.inBattle = true;
+        this.inQueue = false;
+    }
+    turnStart(){
+
+    }
     displayOnlineUsers(number){
         ctx.font = "60px Arial";
         ctx.fillText("Online Users:", number,0,0);

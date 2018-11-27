@@ -62,43 +62,6 @@ function render(card){
     });
 }
 
-function canDiscard(cards){
-  for(let ii = 0; ii < cards.length; ii++){
-    if(!cards[ii].isAtDestination() || !cards[ii].flipped){
-      return false;
-    }
-  }
-  return true;
-}
-
-function discardCards(hand, discarded){
-  let ii = hand.length;
-  while(hand.length > 0){
-    const card = hand.pop();
-    discarded.push(card);
-    setTimeout(() => { 
-      card.discarding = true;
-      card.setDestination(cw*2-card.frontWidth+discarded.length-100, 300-discarded.length);
-    }, 100*ii);
-    ii--;
-  }
-}
-
-function drawCards(deck, hand){
-  let ii = 0;
-  while(deck.length > 0 && ii < 5){
-    hand.push(deck.pop());
-    ii++;
-  }
-  
-  hand.forEach((element, index) => {
-    setTimeout(() => { 
-      element.movingToHand = true;
-      element.setDestination(700+(index*element.frontWidth), 1100);
-    }, index*300);
-  });
-}
-
 function start(){
   player.fillDeckCards();
   animate();
@@ -152,19 +115,24 @@ function getMousePos(canvas, event, scale) {
 }
 
 function isInside(pos, obj){
-	return pos.x > obj.x && pos.x < obj.x+obj.width && pos.y < obj.y+obj.height && pos.y > obj.y;
+  return (
+    pos.x > obj.getPosition().x &&
+    pos.x < obj.getPosition()+obj.getSize().width &&
+    pos.y < obj.getPosition().y+obj.getSize().height &&
+    pos.y > obj.getPosition().y
+  );
 }
 
 canvas.addEventListener('click', function(evt) {
   const mousePos = getMousePos(canvas, evt, gameScale);
-	if (isInside(mousePos, player.endTurnButton)) {
-    player.endTurnButton.onClick();
+	if (isInside(mousePos, player.getEndTurnButton())) {
+    player.getEndTurnButton().onClick();
   }
-  if (isInside(mousePos, player.queueButton)) {
-    player.queueButton.onClick();
+  if (isInside(mousePos, player.queueButton())) {
+    player.getQueueButton().onClick();
   }
-  if (isInside(mousePos, player.surrenderButton)) {
-    player.surrenderButton.onClick();
+  if (isInside(mousePos, player.getSurrenderButton())) {
+    player.getSurrenderButton().onClick();
   }
 
   /*

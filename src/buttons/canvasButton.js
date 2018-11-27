@@ -24,4 +24,10 @@ class Button{
     onClick(){
       console.log("do something");
     }
+    getPosition(){
+      return {x:this.x, y:this.y};
+    }
+    getSize(){
+      return {width:this.width, height:this.height};
+    }
 }

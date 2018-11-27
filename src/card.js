@@ -25,29 +25,24 @@ class Card{
       this.magnitude = 40;
       this.serverData = serverData;
     }
-
     setPosition(x,y){
       this.x = x;
       this.y = y;
     }
-
     getCardWidth(){
       return this.frontWidth;
     }
-  
     isAtDestination(){
       return (
         this.x === this.dx && 
         this.y === this.dy
       );
     }
-  
     setDestination(dx, dy){
       this.dx = dx;
       this.dy = dy;
       this.calcVel();
     }
-  
     calcVel(){
       const dx = this.dx - this.x;
       const dy = this.dy - this.y;
@@ -55,7 +50,6 @@ class Card{
       this.velX = Math.cos(angle) * this.magnitude;
       this.velY = Math.sin(angle) * this.magnitude;
     }
-  
     getDistance(x, dx, y, dy){
       const a = x - dx;
       const b = y - dy;
@@ -64,7 +58,6 @@ class Card{
   
       return c;
     }
-  
     moveToDestination(){
       if(this.getDistance(this.x, this.dx, this.y, this.dy) < 40){
         this.x = this.dx;
@@ -74,15 +67,12 @@ class Card{
         this.y += this.velY;
       }
     }
-  
     drawFront(){
       this.ctx.drawImage(this.front, this.x, this.y, this.frontWidth, this.frontHeight);
     }
-  
     drawBack(){
       this.ctx.drawImage(this.back, this.x, this.y);
     }
-  
     flip(){
       this.ctx.translate(this.x+(this.frontWidth/2),this.y+(this.frontHeight/2));
       //ctx.rotate(angle);
