@@ -22,16 +22,26 @@ class Field{
         element.drawBack();
       });
     }
-    addCards(element, offset = false, stack = true){
+    addCard(element, offset = false, stack = true, simpleOffsetX = 0, simpleOffsetY = 0){
+      //offset based on value
+      if(simpleOffsetX && this.cards.length > 0){
+        simpleOffsetX = this.cards.length*simpleOffsetX;
+      }
+      //offset based on value
+      if(simpleOffsetY && this.cards.length > 0){
+        simpleOffsetY = this.cards.length*simpleOffsetY;
+      }
+      //gives each card an even offset
       let evenOffset = 0;
       if(offset && this.cards.length > 0){
         evenOffset = (this.width - (element.getCardWidth()*this.maxSize)) / (this.maxSize-1);
       }
-      let exponentialx = 0;
+      //puts each card next to eachother
+      let exponentialX = 0;
       if(!stack){
-        exponentialx = element.getCardWidth() * this.cards.length;
+        exponentialX = element.getCardWidth() * this.cards.length;
       }
-      element.setPosition(this.x + evenOffset + exponentialx, this.y);
+      element.setPosition(this.x + evenOffset + exponentialX + simpleOffsetX, this.y + simpleOffsetY);
       this.cards.push(element);
     }
     onClick(){

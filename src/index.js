@@ -34,29 +34,7 @@ socket.addEventListener('close', function(event) {
 socket.addEventListener('error', function(event) {
     console.log("an error has occured!");
 });
-socket.addEventListener('message', function(event) {
-    const type = parseInt(extractType(event.data));
-    const data = extractValue(event.data);
-    switch(type){
-    case TYPE.MSG_RECEIVE_MATCH_START: player.matchStart(data);
-    break;
-    case TYPE.MSG_RECEIVE_TURN_START: player.turnStart(data);
-    break;
-    case TYPE.MSG_RECEIVE_DRAW_CARDS: player.drawCards(data);
-    break;
-    case TYPE.MSG_RECEIVE_DISCARD_CARDS: player.discardCards(data);
-    break;
-    case TYPE.MSG_RECEIVE_PLAY_CARDS: player.playCards(data);
-    break;
-    case TYPE.MSG_RECEIVE_DEAD_CARDS: player.deadCards(data);
-    break;
-    case TYPE.MSG_RECEIVE_ONLINE_USERS: player.displayOnlineUsers(data);
-    break;
-    case TYPE.MSG_RECEIVE_ALL_CARDS: receivedAllCards(data);
-    break;
-        default: console.log("type not found", event.data);
-    }
-});
+
 
 function receivedAllCards(members){
     const container = document.getElementsByClassName("container")[0];
@@ -157,7 +135,9 @@ function createCard(user){
     defenseContainer.appendChild(defense);
     defenseContainer.appendChild(defenseText);
 
-    const hiddenData = document.createTextNode(user);
+    const hiddenData = document.createElement("div");
+    hiddenData.setAttribute("class", "hidden");
+    hiddenData.appendChild(document.createTextNode(JSON.stringify(user)));
 
     card.appendChild(hiddenData);
     card.appendChild(level);

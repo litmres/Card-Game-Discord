@@ -1,25 +1,27 @@
 class Player{
-    constructor(socket, ctx, deckSize, allCards){
+    constructor(socket, ctx, deckSize, allCards, canvasWidth, canvasHeight, gameScale){
       this.socket = socket;
       this.ctx = ctx;
+      this.canvasWidth = canvasWidth/gameScale;
+      this.canvasHeight = canvasHeight/gameScale;
       this.allCards = allCards
       this.hand = [];
       this.discarded = [];
       this.deckSize = deckSize;
       this.discordID = null;
       this.endTurn = false;
-      this.cardWidth = 500;
-      this.cardHeight = 700;
+      this.cardWidth = 400;
+      this.cardHeight = 563;
       this.mustPlay = 1;
       this.inBattle = false;
       this.inQueue = false;
-      this.playField = new PlayField(this.ctx, 650, 800, this.cardWidth*5, this.cardHeight, "blue", this.socket);
-      this.handField = new HandField(this.ctx, 650, 900+this.cardHeight, this.cardWidth*5, this.cardHeight, "blue", this.socket);
-      this.deckField = new DeckField(this.ctx, 50, 800, this.cardWidth, this.cardHeight, "blue", this.socket);
-      this.discardField = new DiscardField(this.ctx, 3250, 800, this.cardWidth, this.cardHeight, "blue", this.socket);
-      this.endTurnButton = new EndTurnButton(this.ctx, 3250, 400, 400, 200, "End Turn", "green", this.socket);
-      this.queueButton = new QueueButton(this.ctx, 1750, 100, 400, 200, "Join Queue", "yellow", this.socket);
-      this.surrenderButton = new SurrenderButton(this.ctx, 3250, 100, 400, 200, "Surrender", "red", this.socket);
+      this.playField = new PlayField(this.ctx, (this.canvasWidth-(this.cardWidth*5))/2, this.canvasHeight-(this.cardHeight*1.5)-50, this.cardWidth*5, this.cardHeight, "blue", this.socket);
+      this.handField = new HandField(this.ctx, (this.canvasWidth-(this.cardWidth*5))/2, this.canvasHeight-(this.cardHeight/2), this.cardWidth*5, this.cardHeight, "blue", this.socket);
+      this.deckField = new DeckField(this.ctx, 50, this.canvasHeight-this.cardHeight-50, this.cardWidth, this.cardHeight, "blue", this.socket);
+      this.discardField = new DiscardField(this.ctx, this.canvasWidth-50-this.cardWidth, this.canvasHeight-this.cardHeight-50, this.cardWidth, this.cardHeight, "blue", this.socket);
+      this.endTurnButton = new EndTurnButton(this.ctx, this.canvasWidth-50-400, this.canvasHeight/2-(200/2), 400, 200, "End Turn", "green", this.socket);
+      this.queueButton = new QueueButton(this.ctx, this.canvasWidth/2-(400/2), 200/2, 400, 200, "Join Queue", "yellow", this.socket);
+      this.surrenderButton = new SurrenderButton(this.ctx, 50, this.canvasHeight/2-(200/2), 400, 200, "Surrender", "red", this.socket);
     }
     getQueueButton(){
         return this.queueButton;
@@ -34,23 +36,34 @@ class Player{
 		this.endTurn = turn;
     }
     drawButtons(){
-        if(this.inBattle){
-            this.endTurnButton.draw();
-            this.surrenderButton.draw();
-        }else{
-            this.queueButton.draw(this.inQueue);
-        }
+        this.getEndTurnButton().setEnabled(!!this.inBattle);
+        this.getSurrenderButton().setEnabled(!!this.inBattle);
+        this.getQueueButton().setEnabled(!this.inBattle);
+        
+        this.getEndTurnButton().draw();
+        this.getSurrenderButton().draw();
+        this.getQueueButton().draw(this.inQueue);
+    }
+    isInBattle(){
+        return !!this.inBattle;
     }
     drawFields(){
         if(!this.inBattle) return;
-        this.playField.draw();
-        this.handField.draw();
-        this.deckField.draw();
-        this.discardField.draw();
+        this.playField.drawField();
+        this.handField.drawField();
+        this.deckField.drawField();
+        this.discardField.drawField();
+    }
+    drawFieldCards(){
+        if(!this.inBattle) return;
+        this.playField.drawCards();
+        this.handField.drawCards();
+        this.deckField.drawCards();
+        this.discardField.drawCards();
     }
     fillDeckCards(){
         for(let ii = 0; ii < this.deckSize; ii++){
-            this.deckField.addCard(new Card(this.ctx, "assets/cardback.png", "assets/cardback.png"));
+            this.deckField.addCard(new Card(this.ctx, "assets/cardback.png", "assets/cardback.png"), false, true, -1,-1);
         }
     }
     addHandCards(array){
@@ -65,7 +78,7 @@ class Player{
     }
     addDiscardedCards(array){
         array.forEach(element => {
-            this.handField.addCard(element);
+            this.handField.addCard(element, false, true, -1, 1);
         });
     }
     drawCards(deck, hand){

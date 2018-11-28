@@ -1,22 +1,35 @@
 class Opponent{
-    constructor(ctx, deckSize, hand){
+    constructor(ctx, deckSize, hand, canvasWidth, canvasHeight, gameScale){
       this.ctx = ctx;
+      this.canvasWidth = canvasWidth/gameScale;
+      this.canvasHeight = canvasHeight/gameScale;
       this.hand = hand;
       this.discarded = [];
       this.deckSize = deckSize;
       this.discordID = null;
-      this.cardWidth = 500;
-      this.cardHeight = 700;
-      this.playField = new PlayField(this.ctx, 650, 500, this.cardWidth*5, this.cardHeight, "red", this.socket);
-      this.handField = new HandField(this.ctx, 650, 0, this.cardWidth*5, this.cardHeight, "red", this.socket);
-      this.deckField = new DeckField(this.ctx, 50, 0, this.cardWidth, this.cardHeight, "red", this.socket);
-      this.discardField = new DiscardField(this.ctx, 3250, 800, this.cardWidth, this.cardHeight, "red", this.socket);
+      this.cardWidth = 400;
+      this.cardHeight = 563;
+      this.playField = new PlayField(this.ctx, (this.canvasWidth-(this.cardWidth*5))/2, 400, this.cardWidth*5, this.cardHeight, "red", this.socket);
+      this.handField = new HandField(this.ctx, (this.canvasWidth-(this.cardWidth*5))/2, -this.cardHeight/2, this.cardWidth*5, this.cardHeight, "red", this.socket);
+      this.deckField = new DeckField(this.ctx, 50, 50, this.cardWidth, this.cardHeight, "red", this.socket);
+      this.discardField = new DiscardField(this.ctx, this.canvasWidth-50-this.cardWidth, 50, this.cardWidth, this.cardHeight, "red", this.socket);
+    }
+    fillDeckCards(){
+        for(let ii = 0; ii < this.deckSize; ii++){
+            this.deckField.addCard(new Card(this.ctx, "assets/cardback.png", "assets/cardback.png"), false, true, -1,-1);
+        }
     }
     drawFields(){
-        this.playField.draw();
-        this.handField.draw();
-        this.deckField.draw();
-        this.discardField.draw();
+        this.playField.drawField();
+        this.handField.drawField();
+        this.deckField.drawField();
+        this.discardField.drawField();
+    }
+    drawFieldCards(){
+        this.playField.drawCards();
+        this.handField.drawCards();
+        this.deckField.drawCards();
+        this.discardField.drawCards();
     }
     drawCards(){
         //move cards from deck to hand then flip

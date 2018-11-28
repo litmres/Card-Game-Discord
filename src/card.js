@@ -1,10 +1,10 @@
 class Card{
-    constructor(ctx, startX = 0, startY = 0, frontImage, backImage, serverData){
+    constructor(ctx, frontImage, backImage, serverData = {}, gameScale){
       this.ctx = ctx;
-      this.x=startX;
-      this.y=startY;
-      this.dx = startX;
-      this.dy = startY;
+      this.x=0;
+      this.y=0;
+      this.dx = 0;
+      this.dy = 0;
       this.velx = 0;
       this.vely = 0;
       this.scaleX=100;
@@ -16,8 +16,8 @@ class Card{
       this.front=new Image();
       this.back=new Image();
       this.front.src=frontImage;
-      this.frontWidth = 400*1.3;
-      this.frontHeight = 563*1.3;
+      this.frontWidth = 400/gameScale;
+      this.frontHeight = 563/gameScale;
       this.back.src=backImage;
       this.movingToHand = false;
       this.flipped = false;
@@ -71,6 +71,7 @@ class Card{
       this.ctx.drawImage(this.front, this.x, this.y, this.frontWidth, this.frontHeight);
     }
     drawBack(){
+      //this.ctx.drawImage(this.back, 0, 0);
       this.ctx.drawImage(this.back, this.x, this.y);
     }
     flip(){

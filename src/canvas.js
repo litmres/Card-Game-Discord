@@ -6,7 +6,7 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 const cw=canvas.width;
 const ch=canvas.height;
-const gameScale = .5;
+const gameScale = .4;
 
 const UNRENDEREDCARDS = [];
 const RENDEREDCARDS = [];
@@ -14,8 +14,8 @@ const RENDEREDCARDS = [];
 //const handCards = [];
 //const discardStack =[];
 
-const opponent = new Opponent(ctx, 30, 0);
-const player = new Player(ctx, socket, 30, RENDEREDCARDS);
+const opponent = new Opponent(ctx, 30, 0, cw, ch, gameScale);
+const player = new Player(socket, ctx, 30, RENDEREDCARDS, cw, ch, gameScale);
 
 function createCards(){
   ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
@@ -52,7 +52,7 @@ function render(card){
     })
     .then((dataUrl)=>{
       RENDEREDCARDS.push({
-        serverData: JSON.parse(card.textContent),
+        serverData: JSON.parse(card.childNodes[0].firstChild.textContent),
         front:dataUrl,
         back:"assets/cardback.png",
       });
@@ -64,6 +64,7 @@ function render(card){
 
 function start(){
   player.fillDeckCards();
+  opponent.fillDeckCards();
   animate();
 }
 
@@ -75,9 +76,15 @@ function animate(){
   ctx.scale(gameScale,gameScale);
 
   player.drawFields();
+  player.drawFieldCards();
   player.drawButtons();
 
-  opponent.drawFields();
+  if(player.isInBattle()){
+    opponent.drawFields();
+    opponent.drawFieldCards();
+    opponent.drawCards();
+  }
+  
   
   /*
   cardDeck.forEach(element => element.drawBack());
@@ -117,7 +124,7 @@ function getMousePos(canvas, event, scale) {
 function isInside(pos, obj){
   return (
     pos.x > obj.getPosition().x &&
-    pos.x < obj.getPosition()+obj.getSize().width &&
+    pos.x < obj.getPosition().x+obj.getSize().width &&
     pos.y < obj.getPosition().y+obj.getSize().height &&
     pos.y > obj.getPosition().y
   );
@@ -125,16 +132,16 @@ function isInside(pos, obj){
 
 canvas.addEventListener('click', function(evt) {
   const mousePos = getMousePos(canvas, evt, gameScale);
-	if (isInside(mousePos, player.getEndTurnButton())) {
+	if(player.getEndTurnButton().isEnabled() && isInside(mousePos, player.getEndTurnButton())) {
     player.getEndTurnButton().onClick();
-  }
-  if (isInside(mousePos, player.getQueueButton())) {
+  }else if(player.getQueueButton().isEnabled() && isInside(mousePos, player.getQueueButton())) {
     player.getQueueButton().onClick();
-  }
-  if (isInside(mousePos, player.getSurrenderButton())) {
+  }else if(player.getSurrenderButton().isEnabled() && isInside(mousePos, player.getSurrenderButton())) {
     player.getSurrenderButton().onClick();
+  }else{
+    console.log("nothing")
   }
-
+  
   /*
   if(cardDeck.length > 0 && handCards.length === 0){
     drawCards(cardDeck, handCards);
@@ -144,3 +151,26 @@ canvas.addEventListener('click', function(evt) {
   */
 }, false);
 
+socket.addEventListener('message', function(event) {
+  const type = parseInt(extractType(event.data));
+  const data = extractValue(event.data);
+  switch(type){
+  case TYPE.MSG_RECEIVE_MATCH_START: player.matchStart(data);
+  break;
+  case TYPE.MSG_RECEIVE_TURN_START: player.turnStart(data);
+  break;
+  case TYPE.MSG_RECEIVE_DRAW_CARDS: player.drawCards(data);
+  break;
+  case TYPE.MSG_RECEIVE_DISCARD_CARDS: player.discardCards(data);
+  break;
+  case TYPE.MSG_RECEIVE_PLAY_CARDS: player.playCards(data);
+  break;
+  case TYPE.MSG_RECEIVE_DEAD_CARDS: player.deadCards(data);
+  break;
+  case TYPE.MSG_RECEIVE_ONLINE_USERS: player.displayOnlineUsers(data);
+  break;
+  case TYPE.MSG_RECEIVE_ALL_CARDS: receivedAllCards(data);
+  break;
+      default: console.log("type not found", event.data);
+  }
+});
