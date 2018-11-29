@@ -3,6 +3,7 @@ class Card{
       this.ctx = ctx;
       this.x=0;
       this.y=0;
+      this.gameScale = gameScale;
       this.dx = 0;
       this.dy = 0;
       this.velx = 0;
@@ -16,8 +17,8 @@ class Card{
       this.front=new Image();
       this.back=new Image();
       this.front.src=frontImage;
-      this.frontWidth = 400/gameScale;
-      this.frontHeight = 563/gameScale;
+      this.frontWidth = 400*1.3;
+      this.frontHeight = 563*1.3;
       this.back.src=backImage;
       this.movingToHand = false;
       this.flipped = false;
@@ -28,6 +29,12 @@ class Card{
     setPosition(x,y){
       this.x = x;
       this.y = y;
+    }
+    getPosition(){
+      return {x:this.x,y:this.y};
+    }
+    getSize(){
+      return {width: this.frontWidth, height:this.frontHeight};
     }
     getCardWidth(){
       return this.frontWidth;
@@ -59,6 +66,7 @@ class Card{
       return c;
     }
     moveToDestination(){
+      if(this.isAtDestination()) return;
       if(this.getDistance(this.x, this.dx, this.y, this.dy) < 40){
         this.x = this.dx;
         this.y = this.dy;
@@ -68,10 +76,11 @@ class Card{
       }
     }
     drawFront(){
+      this.moveToDestination();
       this.ctx.drawImage(this.front, this.x, this.y, this.frontWidth, this.frontHeight);
     }
     drawBack(){
-      //this.ctx.drawImage(this.back, 0, 0);
+      this.moveToDestination();
       this.ctx.drawImage(this.back, this.x, this.y);
     }
     flip(){

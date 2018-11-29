@@ -10,6 +10,9 @@ class Field{
       this.maxSize = maxSize;
       this.cards = [];
     }
+    getCards(){
+      return this.cards;
+    }
     drawField(){
       ctx.beginPath();
       ctx.lineWidth = "6";
@@ -22,7 +25,7 @@ class Field{
         element.drawBack();
       });
     }
-    addCard(element, offset = false, stack = true, simpleOffsetX = 0, simpleOffsetY = 0){
+    addCard(element, offset = false, stack = true, simpleOffsetX = 0, simpleOffsetY = 0, fixed = false){
       //offset based on value
       if(simpleOffsetX && this.cards.length > 0){
         simpleOffsetX = this.cards.length*simpleOffsetX;
@@ -41,7 +44,13 @@ class Field{
       if(!stack){
         exponentialX = element.getCardWidth() * this.cards.length;
       }
-      element.setPosition(this.x + evenOffset + exponentialX + simpleOffsetX, this.y + simpleOffsetY);
+
+      element.setDestination(this.x + evenOffset + exponentialX + simpleOffsetX, this.y + simpleOffsetY);
+
+      if(fixed){
+        element.setPosition(this.x + evenOffset + exponentialX + simpleOffsetX, this.y + simpleOffsetY);
+      }
+      
       this.cards.push(element);
     }
     onClick(){

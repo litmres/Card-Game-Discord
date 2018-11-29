@@ -139,9 +139,19 @@ canvas.addEventListener('click', function(evt) {
   }else if(player.getSurrenderButton().isEnabled() && isInside(mousePos, player.getSurrenderButton())) {
     player.getSurrenderButton().onClick();
   }else{
-    console.log("nothing")
+    console.log("no button has been pressed");
   }
   
+  const array = [];
+  player.getHandCards().forEach(element=>{
+    if(isInside(mousePos, element)){
+      array.push(element);
+      console.log("player clicked a card");
+    }
+  });
+  //player.removeFromHand(array);
+  player.addPlayCards(array);
+
   /*
   if(cardDeck.length > 0 && handCards.length === 0){
     drawCards(cardDeck, handCards);
