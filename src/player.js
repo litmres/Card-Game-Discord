@@ -2,6 +2,7 @@ class Player{
     constructor(socket, ctx, deckSize, allCards, canvasWidth, canvasHeight, gameScale){
       this.socket = socket;
       this.ctx = ctx;
+      this.gameScale = gameScale;
       this.canvasWidth = canvasWidth/gameScale;
       this.canvasHeight = canvasHeight/gameScale;
       this.allCards = allCards
@@ -81,8 +82,19 @@ class Player{
             this.handField.addCard(element, false, true, -1, 1);
         });
     }
-    drawCards(deck, hand){
+    drawCards(data){
+        console.log(data)
+
         //move cards from deck to hand then flip
+
+        const array = [];
+        data.forEach(element=>{
+            array.push(new Card(this.ctx, element.image, "assets/cardback.png", element, this.gameScale));
+        });
+
+        this.addHandCards(array);
+        
+        /*
         let ii = 0;
         while(deck.length > 0 && ii < 5){
             hand.push(deck.pop());
@@ -95,6 +107,7 @@ class Player{
             element.setDestination(700+(index*element.frontWidth), 1100);
             }, index*300);
         });
+        */
     }
     playCards(){
         //move cards from hand to play field
