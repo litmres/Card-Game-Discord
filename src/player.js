@@ -71,8 +71,10 @@ class Player{
         }
     }
     addHandCards(array){
-        array.forEach(element => {
-            this.handField.addCard(element, true, false);
+        array.forEach((element,index) => {
+            setTimeout(()=>{
+                this.handField.addCard(element, true, false);
+            }, index * 500);
         });
     }
     addPlayCards(array){
@@ -86,9 +88,7 @@ class Player{
         });
     }
     drawCards(data){
-        data = data.filter(element=> element !== null);
-        //move cards from deck to hand then flip
-
+        //data = data.filter(element=> element !== null);
         const array = [];
         data.forEach(element=>{
             this.allCards.forEach(value =>{
@@ -98,22 +98,11 @@ class Player{
             });
         });
 
-        this.addHandCards(array);
-        
-        /*
-        let ii = 0;
-        while(deck.length > 0 && ii < 5){
-            hand.push(deck.pop());
-            ii++;
-        }
-        
-        hand.forEach((element, index) => {
-            setTimeout(() => { 
-            element.movingToHand = true;
-            element.setDestination(700+(index*element.frontWidth), 1100);
-            }, index*300);
+        array.forEach(element=>{
+            element.setPosition(this.deckField.getPosition().x, this.deckField.getPosition().y);
         });
-        */
+
+        this.addHandCards(array);
     }
     playCards(){
         //move cards from hand to play field

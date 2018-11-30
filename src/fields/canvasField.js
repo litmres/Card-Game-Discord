@@ -10,6 +10,9 @@ class Field{
       this.maxSize = maxSize;
       this.cards = [];
     }
+    getPosition(){
+      return {x:this.x, y:this.y};
+    }
     getCards(){
       return this.cards;
     }
@@ -36,8 +39,8 @@ class Field{
       }
       //gives each card an even offset
       let evenOffset = 0;
-      if(offset && this.cards.length > 0){
-        evenOffset = (this.width - (element.getCardWidth()*this.maxSize)) / (this.maxSize-1);
+      if(offset){
+        evenOffset = (this.width - (element.getCardWidth()*this.maxSize));
       }
       //puts each card next to eachother
       let exponentialX = 0;

@@ -54,6 +54,7 @@ module.exports = class Player{
             ));
         });
         this.deck.length = this.deckSize;
+        this.deck = this.deck.filter(element=> element !== null);
     }
     drawCards(amount = 5){
         for(let ii = 0; ii < amount; ii++){

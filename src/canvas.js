@@ -10,6 +10,7 @@ const gameScale = .4;
 
 const UNRENDEREDCARDS = [];
 const RENDEREDCARDS = [];
+const ONCURSOR = [];
 //const cardDeck = [];
 //const handCards = [];
 //const discardStack =[];
@@ -130,36 +131,68 @@ function isInside(pos, obj){
   );
 }
 
-canvas.addEventListener('click', function(evt) {
-  const mousePos = getMousePos(canvas, evt, gameScale);
-	if(player.getEndTurnButton().isEnabled() && isInside(mousePos, player.getEndTurnButton())) {
+//canvas.addEventListener('click', onMouseClick, false);
+
+canvas.addEventListener("mousemove", onMouseMove, false);
+
+document.addEventListener("contextmenu", function(e){
+  e.preventDefault();
+}, false);
+
+document.body.addEventListener('mouseup', function (event){
+  event.stopPropagation();
+  switch (event.button) {
+    case 0: onMouseClickLeft(event); break;
+    case 1: console.log("middle mouse button"); break;
+    case 2: onMouseClickRight(event); break; 
+    default: console.log("mouse button type not found");
+  }
+}, false);
+
+function onMouseClickLeft(event) {
+  const cursor = getMousePos(canvas, event, gameScale);
+	if(player.getEndTurnButton().isEnabled() && isInside(cursor, player.getEndTurnButton())) {
     player.getEndTurnButton().onClick();
-  }else if(player.getQueueButton().isEnabled() && isInside(mousePos, player.getQueueButton())) {
+  }else if(player.getQueueButton().isEnabled() && isInside(cursor, player.getQueueButton())) {
     player.getQueueButton().onClick();
-  }else if(player.getSurrenderButton().isEnabled() && isInside(mousePos, player.getSurrenderButton())) {
+  }else if(player.getSurrenderButton().isEnabled() && isInside(cursor, player.getSurrenderButton())) {
     player.getSurrenderButton().onClick();
   }else{
     console.log("no button has been pressed");
   }
   
-  const array = [];
-  player.getHandCards().forEach(element=>{
-    if(isInside(mousePos, element)){
-      array.push(element);
-      console.log("player clicked a card");
-    }
-  });
-  //player.removeFromHand(array);
-  player.addPlayCards(array);
-
-  /*
-  if(cardDeck.length > 0 && handCards.length === 0){
-    drawCards(cardDeck, handCards);
-  }else if(handCards.length > 0 && canDiscard(handCards)){
-    discardCards(handCards, discardStack);
+  if(ONCURSOR.length < 1){
+    const card = player.getHandCards().find(element=>{
+      return (isInside(cursor, element) && element.isAtDestination());
+    });
+    if(!card) return;
+    ONCURSOR.push({card:card, originX: card.getPosition().x, originY:card.getPosition().y});
+    console.log("player clicked a card");
   }
-  */
-}, false);
+}
+
+function onMouseClickRight(event){
+  if(ONCURSOR.length > 0){
+    ONCURSOR.forEach(element=>{
+      element.card.setDestination(element.originX, element.originY);
+    });
+    ONCURSOR.length = 0;
+  }
+}
+
+function onMouseMove(event) {
+  event.stopPropagation();
+  const cursor = getMousePos(canvas, event, gameScale);
+  moveCardWithMouse(cursor, ONCURSOR);
+}
+
+function moveCardWithMouse(cursor, array){
+  if(!array) return;
+  array.forEach(element=>{
+    element.card.setPosition(cursor.x-(element.card.getSize().width/2), cursor.y-(element.card.getSize().height/2));
+    element.card.setDestination(cursor.x-(element.card.getSize().width/2), cursor.y-(element.card.getSize().height/2));
+  });
+}
 
 socket.addEventListener('message', function(event) {
   const type = parseInt(extractType(event.data));
