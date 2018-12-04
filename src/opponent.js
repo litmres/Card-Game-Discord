@@ -16,7 +16,7 @@ class Opponent{
     }
     fillDeckCards(){
         for(let ii = 0; ii < this.deckSize; ii++){
-            this.deckField.addCard(new Card(this.ctx, "assets/cardback.png", "assets/cardback.png"), false, true, 1,1, true);
+            this.deckField.addCard(new Card(this.ctx, "assets/cardback.png", "assets/cardback.png"), false, true, 1,-1, true);
         }
     }
     drawFields(){

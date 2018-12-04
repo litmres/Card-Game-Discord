@@ -24,6 +24,9 @@ class Player{
       this.queueButton = new QueueButton(this.ctx, this.canvasWidth/2-(400/2), 200/2, 400, 200, "Join Queue", "yellow", this.socket);
       this.surrenderButton = new SurrenderButton(this.ctx, 50, this.canvasHeight/2-(200/2), 400, 200, "Surrender", "red", this.socket);
     }
+    getPlayCards(){
+        return this.playField.getCards();
+    }
     getHandCards(){
         return this.handField.getCards();
     }

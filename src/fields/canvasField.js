@@ -17,11 +17,11 @@ class Field{
       return this.cards;
     }
     drawField(){
-      ctx.beginPath();
-      ctx.lineWidth = "6";
-      ctx.strokeStyle = this.color;
-      ctx.rect(this.x,this.y,this.width,this.height); 
-      ctx.stroke();
+      this.ctx.beginPath();
+      this.ctx.lineWidth = "6";
+      this.ctx.strokeStyle = this.color;
+      this.ctx.rect(this.x,this.y,this.width,this.height); 
+      this.ctx.stroke();
     }
     drawCards(){
       this.cards.forEach(element => {

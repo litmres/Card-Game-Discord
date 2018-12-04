@@ -184,6 +184,41 @@ function onMouseMove(event) {
   event.stopPropagation();
   const cursor = getMousePos(canvas, event, gameScale);
   moveCardWithMouse(cursor, ONCURSOR);
+
+  if(ONCURSOR.length < 1){
+    player.getPlayCards().forEach(element => {
+      if(!element.isEmpty) return;
+      element.setColor("green");
+    });
+  }else{
+    lightUpClosestField(player, ONCURSOR);
+  }
+  
+}
+
+function lightUpClosestField(player, onCursor){
+  if(onCursor.length < 1) return;
+  const array = [];
+  player.getPlayCards().forEach(element => {
+    if(!element.isEmpty) return;
+    onCursor.forEach(cursorCard =>{
+      const obj = {
+        distance: element.getDistance(cursorCard.card.x, element.x, cursorCard.card.y, element.y),
+        field: element,
+      }
+      array.push(obj);
+    });
+  });
+  array.sort(function compareNumbers(a, b) {
+    return a.distance - b.distance;
+  });
+  const obj = array.shift();
+  if(obj){
+    obj.field.setColor("yellow");
+  }
+  array.forEach(element=>{
+    element.field.setColor("green");
+  });
 }
 
 function moveCardWithMouse(cursor, array){
