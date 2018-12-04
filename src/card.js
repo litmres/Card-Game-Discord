@@ -23,8 +23,12 @@ class Card{
       this.movingToHand = false;
       this.flipped = false;
       this.discarding = false;
-      this.magnitude = 40;
+      this.originalMagnitude = 40;
+      this.magnitude = this.originalMagnitude;
       this.serverData = serverData;
+    }
+    resetMagnitude(){
+      this.magnitude = this.originalMagnitude;
     }
     setPosition(x,y){
       this.x = x;
@@ -45,7 +49,8 @@ class Card{
         this.y === this.dy
       );
     }
-    setDestination(dx, dy){
+    setDestination(dx, dy, speed = this.originalMagnitude){
+      this.magnitude = speed;
       this.dx = dx;
       this.dy = dy;
       this.calcVel();
@@ -67,9 +72,10 @@ class Card{
     }
     moveToDestination(){
       if(this.isAtDestination()) return;
-      if(this.getDistance(this.x, this.dx, this.y, this.dy) < 40){
+      if(this.getDistance(this.x, this.dx, this.y, this.dy) < this.magnitude){
         this.x = this.dx;
         this.y = this.dy;
+        this.resetMagnitude();
       }else{
         this.x += this.velX;
         this.y += this.velY;

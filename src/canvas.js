@@ -174,7 +174,7 @@ function onMouseClickLeft(event) {
 function onMouseClickRight(event){
   if(ONCURSOR.length > 0){
     ONCURSOR.forEach(element=>{
-      element.card.setDestination(element.originX, element.originY);
+      element.card.setDestination(element.originX, element.originY, 80);
     });
     ONCURSOR.length = 0;
   }

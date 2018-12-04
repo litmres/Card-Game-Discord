@@ -16,8 +16,8 @@ class Player{
       this.mustPlay = 1;
       this.inBattle = false;
       this.inQueue = false;
-      this.playField = new PlayField(this.ctx, (this.canvasWidth-(this.cardWidth*5))/2, this.canvasHeight-(this.cardHeight*1.5)-50, this.cardWidth*5, this.cardHeight, "blue", 5, this.socket);
-      this.handField = new HandField(this.ctx, (this.canvasWidth-(this.cardWidth*5))/2, this.canvasHeight-(this.cardHeight/2), this.cardWidth*5, this.cardHeight, "blue", 5, this.socket);
+      this.playField = new PlayField(this.ctx, (this.canvasWidth-(this.cardWidth*5))/2, this.canvasHeight/2, this.cardWidth*5, this.cardHeight, "blue", 5, this.socket);
+      this.handField = new HandField(this.ctx, (this.canvasWidth-(this.cardWidth*5))/2, this.canvasHeight/2+this.cardHeight+50, this.cardWidth*5, this.cardHeight, "blue", 5, this.socket);
       this.deckField = new DeckField(this.ctx, 50, this.canvasHeight-this.cardHeight-50, this.cardWidth, this.cardHeight, "blue", 5, this.socket);
       this.discardField = new DiscardField(this.ctx, this.canvasWidth-50-this.cardWidth, this.canvasHeight-this.cardHeight-50, this.cardWidth, this.cardHeight, "blue", 5, this.socket);
       this.endTurnButton = new EndTurnButton(this.ctx, this.canvasWidth-50-400, this.canvasHeight/2-(200/2), 400, 200, "End Turn", "green", this.socket);

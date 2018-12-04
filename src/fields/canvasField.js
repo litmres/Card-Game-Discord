@@ -37,11 +37,13 @@ class Field{
       if(simpleOffsetY && this.cards.length > 0){
         simpleOffsetY = this.cards.length*simpleOffsetY;
       }
+      
       //gives each card an even offset
       let evenOffset = 0;
       if(offset){
-        evenOffset = (this.width - (element.getCardWidth()*this.maxSize));
+        evenOffset = ((this.width - element.getCardWidth()*this.maxSize) / this.maxSize) * (this.cards.length+1);
       }
+
       //puts each card next to eachother
       let exponentialX = 0;
       if(!stack){
