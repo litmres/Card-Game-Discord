@@ -246,8 +246,8 @@ function moveCardWithMouse(cursor, array){
 }
 
 socket.addEventListener('message', function(event) {
-  const type = parseInt(extractType(event.data));
-  const data = extractValue(event.data);
+  const type = parseInt(extractType(event.data, TYPE.SPLITTER));
+  const data = extractValue(event.data, TYPE.SPLITTER);
   switch(type){
   case TYPE.MSG_RECEIVE_MATCH_START: player.matchStart(data);
   break;

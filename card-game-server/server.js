@@ -65,7 +65,7 @@ wss.on('connection', function connection(ws, req) {
     });
 	
     ws.on('message', function(data) {
-        const type = parseInt(extractType(data));
+        const type = parseInt(extractType(data, TYPE.SPLITTER));
         switch(type){
             case TYPE.MSG_RECEIVE_CONNECTED: userConnected(ONLINEUSERS);
             break;
@@ -81,7 +81,7 @@ wss.on('connection', function connection(ws, req) {
             break;
             case TYPE.MSG_RECEIVE_END_TURN: userEndsTurn(user, ROOMS);
             break;
-            case TYPE.MSG_RECEIVE_PLAY_CARDS: userPlaysCards(user, data);
+            case TYPE.MSG_RECEIVE_PLAY_CARDS: userPlaysCards(user, data, TYPE.SPLITTER);
             break;
 			case TYPE.MSG_RECEIVE_GET_ALL_CARDS: userRequestsAllCards(user, ALLCARDS);
 			break;
@@ -167,9 +167,9 @@ function getUniqueID(id){
     return id++;
 }
 
-function userPlaysCards(player, data){
+function userPlaysCards(player, data, splitter){
     console.log("user plays cards");
-    const value = extractValue(data);
+    const value = extractValue(data, splitter);
     player.playCards(value);
 }
 
@@ -226,12 +226,12 @@ function findPlayerRoom(player, rooms){
     return room;
 }
 
-function extractType(string){
-    return string.split(":")[0];
+function extractType(string, splitter){
+    return string.split(splitter)[0];
 }
 
-function extractValue(string){
-    return JSON.parse(string.split(":")[1]);
+function extractValue(string, splitter){
+    return JSON.parse(string.split(splitter)[1]);
 }
 
 function addCards(array, allCards){

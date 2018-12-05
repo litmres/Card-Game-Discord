@@ -60,12 +60,12 @@ function receivedAllCards(members){
     });
 }
 
-function extractType(string){
-    return string.split(TYPE.SPLITTER)[0];
+function extractType(string, splitter){
+    return string.split(splitter)[0];
 }
 
-function extractValue(string){
-    return JSON.parse(string.split(TYPE.SPLITTER)[1]);
+function extractValue(string, splitter){
+    return JSON.parse(string.split(splitter)[1]);
 }
 
 function rndNumBetween(min,max){
