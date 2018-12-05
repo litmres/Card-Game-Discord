@@ -4,7 +4,17 @@ class HandField extends Field{
     }
     drawCards(){
         this.cards.forEach(element => {
-            element.drawFront();
-          });
+            if(element){
+                element.drawFront();
+            }
+        });
+    }
+    removeHandCard(){
+        this.cards.forEach((element,index)=>{
+          if(element && element.getOnCursor()){
+            this.cards[index] = undefined;
+          }
+        });
+        console.log(this.cards);
     }
 }

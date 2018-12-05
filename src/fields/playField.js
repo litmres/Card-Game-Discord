@@ -9,7 +9,7 @@ class PlayField extends Field{
     }
     fillPlayField(){
         for(let ii = 0; ii < 5; ii++){
-            const card = new EmptyCardField(this.ctx, this.x, this.y, 400, 563, "green", this.maxSize, this.width, this.height);
+            const card = new EmptyCardField(this.ctx, this.x, this.y, 400, 563, "green", "yellow", this.maxSize, this.width, this.height);
             card.setPosition(ii);
             this.cards.push(card);
         }

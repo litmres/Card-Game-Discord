@@ -152,7 +152,7 @@ document.body.addEventListener('mouseup', function (event){
 function onMouseClickLeft(event) {
   const cursor = getMousePos(canvas, event, gameScale);
 	if(player.getEndTurnButton().isEnabled() && isInside(cursor, player.getEndTurnButton())) {
-    player.getEndTurnButton().onClick();
+    player.getEndTurnButton().onClick(player.getPlayCards());
   }else if(player.getQueueButton().isEnabled() && isInside(cursor, player.getQueueButton())) {
     player.getQueueButton().onClick();
   }else if(player.getSurrenderButton().isEnabled() && isInside(cursor, player.getSurrenderButton())) {
@@ -163,12 +163,28 @@ function onMouseClickLeft(event) {
   
   if(ONCURSOR.length < 1){
     const card = player.getHandCards().find(element=>{
-      return (isInside(cursor, element) && element.isAtDestination());
+      return (element && isInside(cursor, element) && element.isAtDestination());
     });
     if(!card) return;
+    card.setOnCursor(true);
     ONCURSOR.push({card:card, originX: card.getPosition().x, originY:card.getPosition().y});
     console.log("player clicked a card");
+  }else{
+    moveCardIntoPlay(ONCURSOR, player);
+    ONCURSOR.length = 0;
   }
+}
+
+function moveCardIntoPlay(onCursor, player){
+  const litField = player.getPlayCards().filter(element => element.getLit()).shift();
+  onCursor.forEach(element=>{
+    litField.setCard(element.card);
+    litField.setEmpty(false);
+    player.removeHandCard(element.card);
+    element.card.setOnCursor(false);
+    element.card.setDestination(litField.getPosition().x, litField.getPosition().y);
+  });
+  onCursor.length = 0;
 }
 
 function onMouseClickRight(event){
@@ -188,7 +204,7 @@ function onMouseMove(event) {
   if(ONCURSOR.length < 1){
     player.getPlayCards().forEach(element => {
       if(!element.isEmpty) return;
-      element.setColor("green");
+      element.setLit(false);
     });
   }else{
     lightUpClosestField(player, ONCURSOR);
@@ -214,10 +230,10 @@ function lightUpClosestField(player, onCursor){
   });
   const obj = array.shift();
   if(obj){
-    obj.field.setColor("yellow");
+    obj.field.setLit(true);
   }
   array.forEach(element=>{
-    element.field.setColor("green");
+    element.field.setLit(false);
   });
 }
 

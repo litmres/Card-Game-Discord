@@ -1,6 +1,7 @@
 class Card{
     constructor(ctx, frontImage, backImage, serverData = {}, gameScale){
       this.ctx = ctx;
+      this.onCursor = false;
       this.x=0;
       this.y=0;
       this.gameScale = gameScale;
@@ -26,6 +27,12 @@ class Card{
       this.originalMagnitude = 40;
       this.magnitude = this.originalMagnitude;
       this.serverData = serverData;
+    }
+    setOnCursor(bool){
+      this.onCursor = bool;
+    }
+    getOnCursor(){
+      return !!this.onCursor;
     }
     resetMagnitude(){
       this.magnitude = this.originalMagnitude;

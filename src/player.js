@@ -11,15 +11,15 @@ class Player{
       this.deckSize = deckSize;
       this.discordID = null;
       this.endTurn = false;
-      this.cardWidth = 400;
-      this.cardHeight = 563;
+      this.cardWidth = 400*1.3;
+      this.cardHeight = 563*1.3;
       this.mustPlay = 1;
       this.inBattle = false;
       this.inQueue = false;
       this.playField = new PlayField(this.ctx, (this.canvasWidth-(this.cardWidth*5))/2, this.canvasHeight/2, this.cardWidth*5, this.cardHeight, "blue", 5, this.socket);
       this.handField = new HandField(this.ctx, (this.canvasWidth-(this.cardWidth*5))/2, this.canvasHeight/2+this.cardHeight+50, this.cardWidth*5, this.cardHeight, "blue", 5, this.socket);
-      this.deckField = new DeckField(this.ctx, 50, this.canvasHeight-this.cardHeight-50, this.cardWidth, this.cardHeight, "blue", 5, this.socket);
-      this.discardField = new DiscardField(this.ctx, this.canvasWidth-50-this.cardWidth, this.canvasHeight-this.cardHeight-50, this.cardWidth, this.cardHeight, "blue", 5, this.socket);
+      this.deckField = new DeckField(this.ctx, 50, this.canvasHeight-this.cardHeight-50, this.cardWidth/1.3, this.cardHeight/1.3, "blue", 5, this.socket);
+      this.discardField = new DiscardField(this.ctx, this.canvasWidth-50-this.cardWidth, this.canvasHeight-this.cardHeight-50, this.cardWidth/1.3, this.cardHeight/1.3, "blue", 5, this.socket);
       this.endTurnButton = new EndTurnButton(this.ctx, this.canvasWidth-50-400, this.canvasHeight/2-(200/2), 400, 200, "End Turn", "green", this.socket);
       this.queueButton = new QueueButton(this.ctx, this.canvasWidth/2-(400/2), 200/2, 400, 200, "Join Queue", "yellow", this.socket);
       this.surrenderButton = new SurrenderButton(this.ctx, 50, this.canvasHeight/2-(200/2), 400, 200, "Surrender", "red", this.socket);
@@ -29,6 +29,9 @@ class Player{
     }
     getHandCards(){
         return this.handField.getCards();
+    }
+    removeHandCard(){
+        this.handField.removeHandCard();
     }
     getQueueButton(){
         return this.queueButton;
