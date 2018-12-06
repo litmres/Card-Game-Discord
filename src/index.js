@@ -19,6 +19,10 @@ const TYPE = {
     MSG_RECEIVE_DEAD_CARDS:           	25,
     MSG_RECEIVE_ONLINE_USERS:           26,
     MSG_RECEIVE_ALL_CARDS:  		    27,
+    MSG_RECEIVE_OPPONENT_DRAW_CARDS:    30,
+    MSG_RECEIVE_OPPONENT_DISCARD_CARDS: 31,
+    MSG_RECEIVE_OPPONENT_PLAY_CARDS:    32,
+    MSG_RECEIVE_OPPONENT_DEAD_CARDS:    33,
 };
 
 const socket = new WebSocket('ws://localhost:9091');
