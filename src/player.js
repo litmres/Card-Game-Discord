@@ -19,7 +19,7 @@ class Player{
       this.playField = new PlayField(this.ctx, (this.canvasWidth-(this.cardWidth*5))/2, this.canvasHeight/2, this.cardWidth*5, this.cardHeight, "blue", 5, this.socket);
       this.handField = new HandField(this.ctx, (this.canvasWidth-(this.cardWidth*5))/2, this.canvasHeight/2+this.cardHeight+50, this.cardWidth*5, this.cardHeight, "blue", 5, this.socket);
       this.deckField = new DeckField(this.ctx, 50, this.canvasHeight-this.cardHeight-50, this.cardWidth/1.3, this.cardHeight/1.3, "blue", 5, this.socket);
-      this.discardField = new DiscardField(this.ctx, this.canvasWidth-50-this.cardWidth, this.canvasHeight-this.cardHeight-50, this.cardWidth/1.3, this.cardHeight/1.3, "blue", 5, this.socket);
+      this.discardField = new DiscardField(this.ctx, this.canvasWidth-50-this.cardWidth/1.3, this.canvasHeight-this.cardHeight-50, this.cardWidth/1.3, this.cardHeight/1.3, "blue", 5, this.socket);
       this.endTurnButton = new EndTurnButton(this.ctx, this.canvasWidth-50-400, this.canvasHeight/2-(200/2), 400, 200, "End Turn", "green", this.socket);
       this.queueButton = new QueueButton(this.ctx, this.canvasWidth/2-(400/2), 200/2, 400, 200, "Join Queue", "yellow", this.socket);
       this.surrenderButton = new SurrenderButton(this.ctx, 50, this.canvasHeight/2-(200/2), 400, 200, "Surrender", "red", this.socket);
@@ -94,7 +94,7 @@ class Player{
         });
     }
     drawCards(data){
-        console.log("drawing cards")
+        console.log("Player: drawing cards")
         //data = data.filter(element=> element !== null);
         const array = [];
         data.forEach(element=>{
@@ -115,7 +115,7 @@ class Player{
         //move cards from hand to play field
     }
     deadCards(cards){
-        console.log("removing dead cards");
+        console.log("Player: removing dead cards");
         this.playField.getCards().forEach((element, index)=>{
             if(element.getCard() && this.checkIdInArray(cards, element.getCard().serverData.id)){
                 setTimeout(() => {
@@ -130,7 +130,7 @@ class Player{
         return filtered.length > 0;
     }
     discardCards(cards){
-        console.log("discarding cards");
+        console.log("Player: discarding cards");
         //move cards from play to discard field
         //move cards from hand to discard field
         let ii = this.handField.getCards().length;

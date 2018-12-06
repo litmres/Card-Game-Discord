@@ -11,11 +11,12 @@ const gameScale = .4;
 const UNRENDEREDCARDS = [];
 const RENDEREDCARDS = [];
 const ONCURSOR = [];
+const CARDBACK = "assets/cardback.png";
 //const cardDeck = [];
 //const handCards = [];
 //const discardStack =[];
 
-const opponent = new Opponent(ctx, 30, 0, cw, ch, gameScale);
+const opponent = new Opponent(ctx, 30, 0, cw, ch, gameScale, CARDBACK);
 const player = new Player(socket, ctx, 30, RENDEREDCARDS, cw, ch, gameScale);
 
 function createCards(){
@@ -29,7 +30,7 @@ function createCards(){
   }
   
   for(let ii = 0; ii < UNRENDEREDCARDS.length; ii++){
-    render(UNRENDEREDCARDS[ii]);
+    render(UNRENDEREDCARDS[ii], CARDBACK);
   }
 
   const interval = setInterval(()=>{
@@ -46,7 +47,7 @@ function createCards(){
   }, 500);
 }
 
-function render(card){
+function render(card, cardBack){
   domtoimage.toPng(card, {
     width:190,
     height:300,
@@ -55,7 +56,7 @@ function render(card){
       RENDEREDCARDS.push({
         serverData: JSON.parse(card.childNodes[0].firstChild.textContent),
         front:dataUrl,
-        back:"assets/cardback.png",
+        back:cardBack,
       });
     })
     .catch(function (error) {
