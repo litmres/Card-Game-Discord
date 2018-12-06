@@ -101,21 +101,28 @@ function userRequestsAllCards(player){
 }
 
 function nextTurn(room){
+    room.getPlayers().forEach(element=>element.sendEndOfTurnData());
     cardsFight(room.getPlayers());
+    room.getPlayers().forEach(element=>element.sendEndOfTurnData());
     room.getPlayers().forEach(element => element.beginTurn());
     room.getPlayers().forEach(element => element.drawCards());
 }
 
 function cardsFight(players){
-    players[0].getInPlay().forEach((card, index) =>{
-        players[0].getCard(index).lowerDefense(players[1].getCard(index).attack);
-        players[1].getCard(index).lowerDefense(players[0].getCard(index).attack);
-    });
+    console.log("cards fighting")
+    for(let ii = 0; ii < 5; ii++){
+        const p1Card = players[0].getCardInPlay(ii);
+        const p2Card = players[1].getCardInPlay(ii);
+        if(p1Card && p2Card){
+            p1Card.lowerDefense(p2Card.attack);
+            p2Card.lowerDefense(p1Card.attack);
+        }
+    }
 
     players.forEach(element => {
         element.getInPlay().forEach((card, index) => {
-            if(card.isDead()){
-                element.removeDeadCards([card]);
+            if(card && card.isDead()){
+                element.removeDeadCards(card, index);
             }
         });
     });
@@ -176,7 +183,8 @@ function userPlaysCards(player, data, splitter){
 function userEndsTurn(player, rooms){
     console.log("user ends turn");
     const room = findPlayerRoom(player, rooms);
-	room.getPlayer(player.id).setEndTurn();
+    room.getPlayer(player.id).setEndTurn();
+    room.getPlayer(player.id).discardCards();
 
     if(room.getPlayersEndedTurn()){
         nextTurn(room);

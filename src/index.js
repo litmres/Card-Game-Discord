@@ -65,6 +65,9 @@ function extractType(string, splitter){
 }
 
 function extractValue(string, splitter){
+    if(!string.split(splitter)[1]){
+        return undefined;
+    }
     return JSON.parse(string.split(splitter)[1]);
 }
 

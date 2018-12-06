@@ -179,7 +179,6 @@ function moveCardIntoPlay(onCursor, player){
   const litField = player.getPlayCards().filter(element => element.getLit()).shift();
   onCursor.forEach(element=>{
     litField.setCard(element.card);
-    litField.setEmpty(false);
     player.removeHandCard(element.card);
     element.card.setOnCursor(false);
     element.card.setDestination(litField.getPosition().x, litField.getPosition().y);

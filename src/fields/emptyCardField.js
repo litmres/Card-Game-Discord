@@ -18,10 +18,14 @@ class EmptyCardField{
     }
     setCard(card){
         this.card = card;
+        this.setEmpty(!card);
+    }
+    getCard(){
+        return this.card;
     }
     setEmpty(bool){
         this.isEmpty = bool;
-        this.setLit(false);
+        this.setLit(!!bool);
     }
     drawFront(){
         this.ctx.beginPath();

@@ -6,6 +6,7 @@ module.exports = class Player{
         this.discordID = null;
         this.allCards = allCards;
         this.deckSize = deckSize;
+        this.deadCards = [];
         this.deck = [];
         this.hand = [];
         this.discarded = [];
@@ -27,6 +28,9 @@ module.exports = class Player{
 	}
     getCard(index){
         return this.hand[index];
+    }
+    getCardInPlay(index){
+        return this.inPlay[index];
     }
     getInHand(){
         return this.hand;
@@ -76,25 +80,37 @@ module.exports = class Player{
         this.sendToSocket(data);
     }
     playCards(chosenCards){
-        removeElementsFromArray(this.hand, chosenCards);
-        addElementsToArray(this.inPlay, chosenCards);
-        
-        const data = this.TYPE.MSG_SEND_PLAY_CARDS + this.TYPE.SPLITTER + JSON.stringify(chosenCards);
-        this.sendToSocket(data);
+        const array = getCardsByID(this.hand, chosenCards);
+        addElementsToArray(this.inPlay, array);
+        removeElementsFromArray(this.hand, array);
+        //const data = this.TYPE.MSG_SEND_PLAY_CARDS + this.TYPE.SPLITTER + JSON.stringify(array);
+        //this.sendToSocket(data);
     }
-    removeDeadCards(deadCards){
-        deadCards.forEach(element =>{
-            this.discarded.push(this.inPlay[element]);
-            this.inPlay[element] = undefined;
-        });
+    removeDeadCards(card, index){
+        this.discarded.push(this.inPlay[index]);
+        this.inPlay[index] = undefined;
+
+        this.deadCards.push(card);
         
-        const data = this.TYPE.MSG_SEND_DEAD_CARDS + this.TYPE.SPLITTER + JSON.stringify(deadCards);
+        const data = this.TYPE.MSG_SEND_DEAD_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.deadCards);
         this.sendToSocket(data);
+
+        this.deadCards.length = 0;
     }
 	sendAllCards(){
 		const data = this.TYPE.MSG_SEND_ALL_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.allCards);
 		this.sendToSocket(data);
-	}
+    }
+    sendEndOfTurnData(){
+        const playCardsData = this.TYPE.MSG_SEND_PLAY_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.inPlay);
+        this.sendToSocket(playCardsData);
+
+        const inHandData = this.TYPE.MSG_SEND_PLAY_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.hand);
+        this.sendToSocket(inHandData);
+
+        const discardedData = this.TYPE.MSG_SEND_DISCARD_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.discarded);
+        this.sendToSocket(discardedData);
+    }
     sendToSocket(data){
         this.socket.send(data);
     }
@@ -122,12 +138,36 @@ function removeCards(from, to, selection){
 */
 
 function addElementsToArray(toArray, toAdd){
-    toAdd.forEach(element =>{
-        toArray[element.position] = element;
+    toAdd.forEach((element, index) =>{
+        toArray[index] = element;
     })
 }
 
 function removeElementsFromArray(fromArray, toRemove){
-    const removed = fromArray.filter(element => !toRemove.includes(element));
-    return removed;
+    const array = [];
+
+    fromArray.forEach(element=>{
+        if(!checkIdInArray(toRemove, element.id)){
+            array.push(element);
+        }
+    });
+
+    return array;
+}
+
+function checkIdInArray(array, id){
+    const filtered = array.filter(element=> (element && element === id));
+    return filtered.length > 0;
+}
+
+function getCardsByID(hand, cardIdArray){
+    const array = [];
+    hand.forEach(element=>{
+        if(checkIdInArray(cardIdArray, element.id)){
+            array.push(element);
+        }else{
+            array.push(undefined);
+        }
+    });
+    return array;
 }
