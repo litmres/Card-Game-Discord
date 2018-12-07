@@ -12,13 +12,13 @@ class Button{
     }
     draw(){
       if(!this.enabled) return;
-      ctx.beginPath();
-      ctx.lineWidth = "6";
-      ctx.strokeStyle = this.color;
-      ctx.rect(this.x,this.y,this.width,this.height); 
-      ctx.stroke();
-      ctx.font = "60px Arial";
-      ctx.fillText(this.text,this.x + this.width/4,this.y+this.height/2);
+      this.ctx.beginPath();
+      this.ctx.lineWidth = "6";
+      this.ctx.strokeStyle = this.color;
+      this.ctx.rect(this.x,this.y,this.width,this.height); 
+      this.ctx.stroke();
+      this.ctx.font = "60px Arial";
+      this.ctx.fillText(this.text,this.x + this.width/4,this.y+this.height/2);
     }
     setEnabled(enabled){
       this.enabled = enabled;

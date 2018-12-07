@@ -10,6 +10,9 @@ class Field{
       this.maxSize = maxSize;
       this.cards = [];
     }
+    clear(){
+      this.cards.length = 0;
+    }
     getPosition(){
       return {x:this.x, y:this.y};
     }

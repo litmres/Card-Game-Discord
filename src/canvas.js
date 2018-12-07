@@ -12,12 +12,14 @@ const UNRENDEREDCARDS = [];
 const RENDEREDCARDS = [];
 const ONCURSOR = [];
 const CARDBACK = "assets/cardback.png";
+const MAXSIZE = 5;
+const DECKSIZE = 30;
 //const cardDeck = [];
 //const handCards = [];
 //const discardStack =[];
 
-const opponent = new Opponent(ctx, 30, 0, cw, ch, gameScale, CARDBACK);
-const player = new Player(socket, ctx, 30, RENDEREDCARDS, cw, ch, gameScale);
+const opponent = new Opponent(ctx, DECKSIZE, RENDEREDCARDS, cw, ch, gameScale, CARDBACK, MAXSIZE);
+const player = new Player(socket, ctx, DECKSIZE, RENDEREDCARDS, cw, ch, gameScale, MAXSIZE);
 
 function createCards(){
   ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
@@ -80,11 +82,11 @@ function animate(){
   player.drawFields();
   player.drawFieldCards();
   player.drawButtons();
+  player.drawOnlineUsers();
 
   if(player.isInBattle()){
     opponent.drawFields();
     opponent.drawFieldCards();
-    opponent.drawCards();
   }
   
   
@@ -155,7 +157,8 @@ function onMouseClickLeft(event) {
 	if(player.getEndTurnButton().isEnabled() && isInside(cursor, player.getEndTurnButton())) {
     player.getEndTurnButton().onClick(player.getPlayCards());
   }else if(player.getQueueButton().isEnabled() && isInside(cursor, player.getQueueButton())) {
-    player.getQueueButton().onClick();
+    player.getQueueButton().onClick(player.getInQueue());
+    player.setQueue(!player.getInQueue());
   }else if(player.getSurrenderButton().isEnabled() && isInside(cursor, player.getSurrenderButton())) {
     player.getSurrenderButton().onClick();
   }else{
@@ -261,9 +264,21 @@ socket.addEventListener('message', function(event) {
   break;
   case TYPE.MSG_RECEIVE_DEAD_CARDS: player.deadCards(data);
   break;
-  case TYPE.MSG_RECEIVE_ONLINE_USERS: player.displayOnlineUsers(data);
+  case TYPE.MSG_RECEIVE_ONLINE_USERS: player.setOnlineUsers(data);
   break;
   case TYPE.MSG_RECEIVE_ALL_CARDS: receivedAllCards(data);
+  break;
+  case TYPE.MSG_RECEIVE_OPPONENT_DRAW_CARDS: opponent.drawCards(data);
+  break;
+  case TYPE.MSG_RECEIVE_OPPONENT_DISCARD_CARDS: opponent.discardCards(data);
+  break;
+  case TYPE.MSG_RECEIVE_OPPONENT_PLAY_CARDS: opponent.playCards(data);
+  break;
+  case TYPE.MSG_RECEIVE_OPPONENT_DEAD_CARDS: opponent.deadCards(data);
+  break;
+  case TYPE.MSG_RECEIVE_MATCH_END: 
+      opponent.matchEnd();
+      player.matchEnd(data);
   break;
       default: console.log("type not found", event.data);
   }

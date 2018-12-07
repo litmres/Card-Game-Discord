@@ -1,13 +1,13 @@
 class Player{
-    constructor(socket, ctx, deckSize, allCards, canvasWidth, canvasHeight, gameScale){
+    constructor(socket, ctx, deckSize, allCards, canvasWidth, canvasHeight, gameScale, maxSize){
       this.socket = socket;
       this.ctx = ctx;
       this.gameScale = gameScale;
       this.canvasWidth = canvasWidth/gameScale;
       this.canvasHeight = canvasHeight/gameScale;
       this.allCards = allCards
-      //this.hand = [];
-      this.discarded = [];
+      this.onlineUsers = 0;
+      this.maxSize = maxSize;
       this.deckSize = deckSize;
       this.discordID = null;
       this.endTurn = false;
@@ -16,13 +16,19 @@ class Player{
       this.mustPlay = 1;
       this.inBattle = false;
       this.inQueue = false;
-      this.playField = new PlayField(this.ctx, (this.canvasWidth-(this.cardWidth*5))/2, this.canvasHeight/2, this.cardWidth*5, this.cardHeight, "blue", 5, this.socket);
-      this.handField = new HandField(this.ctx, (this.canvasWidth-(this.cardWidth*5))/2, this.canvasHeight/2+this.cardHeight+50, this.cardWidth*5, this.cardHeight, "blue", 5, this.socket);
-      this.deckField = new DeckField(this.ctx, 50, this.canvasHeight-this.cardHeight-50, this.cardWidth/1.3, this.cardHeight/1.3, "blue", 5, this.socket);
-      this.discardField = new DiscardField(this.ctx, this.canvasWidth-50-this.cardWidth/1.3, this.canvasHeight-this.cardHeight-50, this.cardWidth/1.3, this.cardHeight/1.3, "blue", 5, this.socket);
+      this.playField = new PlayField(this.ctx, (this.canvasWidth-(this.cardWidth*5))/2, this.canvasHeight/2, this.cardWidth*5, this.cardHeight, "blue", this.maxSize, this.socket);
+      this.handField = new HandField(this.ctx, (this.canvasWidth-(this.cardWidth*5))/2, this.canvasHeight/2+this.cardHeight+50, this.cardWidth*5, this.cardHeight, "blue", this.maxSize, this.socket);
+      this.deckField = new DeckField(this.ctx, 50, this.canvasHeight/2 + 150, this.cardWidth/1.3, this.cardHeight/1.3, "blue", this.maxSize, this.socket);
+      this.discardField = new DiscardField(this.ctx, this.canvasWidth-50-this.cardWidth/1.3, this.canvasHeight/2 + 150, this.cardWidth/1.3, this.cardHeight/1.3, "blue", this.maxSize, this.socket);
       this.endTurnButton = new EndTurnButton(this.ctx, this.canvasWidth-50-400, this.canvasHeight/2-(200/2), 400, 200, "End Turn", "green", this.socket);
       this.queueButton = new QueueButton(this.ctx, this.canvasWidth/2-(400/2), 200/2, 400, 200, "Join Queue", "yellow", this.socket);
       this.surrenderButton = new SurrenderButton(this.ctx, 50, this.canvasHeight/2-(200/2), 400, 200, "Surrender", "red", this.socket);
+    }
+    getInQueue(){
+        return !!this.inQueue;
+    }
+    setQueue(bool){
+        this.inQueue = bool;
     }
     getPlayCards(){
         return this.playField.getCards();
@@ -52,7 +58,7 @@ class Player{
         
         this.getEndTurnButton().draw();
         this.getSurrenderButton().draw();
-        this.getQueueButton().draw(this.inQueue);
+        this.getQueueButton().draw();
     }
     isInBattle(){
         return !!this.inBattle;
@@ -85,7 +91,7 @@ class Player{
     }
     addPlayCards(array){
         array.forEach(element => {
-            this.handField.addCard(element, true, false);
+            this.playField.addCard(element, true, false);
         });
     }
     addDiscardedCards(array){
@@ -149,12 +155,26 @@ class Player{
         this.inBattle = true;
         this.inQueue = false;
     }
+    matchEnd(data){
+        this.inBattle = false;
+        this.playField.clear();
+        this.deckField.clear();
+        this.discardField.clear();
+        this.handField.clear();
+        this.QueueButton.clear();
+    }
     turnStart(){
         console.log("turn start")
     }
-    displayOnlineUsers(number){
+    setOnlineUsers(data){
+        this.onlineUsers = data;
+    }
+    drawOnlineUsers(){
+        if(this.inBattle) return;
         this.ctx.font = "60px Arial";
-        this.ctx.fillText("Online Users:", number,0,0);
+        const x = this.getQueueButton().getPosition().x;
+        const y = this.getQueueButton().getPosition().y - 20;
+        this.ctx.fillText(`Online Users: ${this.onlineUsers}`,x, y);
     }
     sendToSocket(data){
         this.socket.send(data);

@@ -23,6 +23,7 @@ const TYPE = {
     MSG_RECEIVE_OPPONENT_DISCARD_CARDS: 31,
     MSG_RECEIVE_OPPONENT_PLAY_CARDS:    32,
     MSG_RECEIVE_OPPONENT_DEAD_CARDS:    33,
+    MSG_RECEIVE_MATCH_END:              40,
 };
 
 const socket = new WebSocket('ws://localhost:9091');

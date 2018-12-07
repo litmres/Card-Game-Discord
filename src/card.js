@@ -28,6 +28,12 @@ class Card{
       this.magnitude = this.originalMagnitude;
       this.serverData = serverData;
     }
+    setFrontCard(image){
+      this.front.src=image;
+    }
+    getFrontCard(){
+      return this.front.src;
+    }
     setOnCursor(bool){
       this.onCursor = bool;
     }
@@ -36,6 +42,9 @@ class Card{
     }
     resetMagnitude(){
       this.magnitude = this.originalMagnitude;
+    }
+    setServerData(data){
+      this.serverData = data;
     }
     setPosition(x,y){
       this.x = x;

@@ -14,11 +14,18 @@ module.exports = class Player{
         this.mustPlay = 1;
         this.endTurn = false;
         this.TYPE = TYPE;
+        this.opponent = undefined;
+    }
+    setOpponent(opponent){
+        console.log("set opponent");
+        this.opponent = opponent;
     }
     setDiscordID(discordID){
+        console.log("set discord id");
         this.discordID = discordID;
     }
     beginTurn(){
+        console.log("begin turn");
         this.endTurn = false;
         const data = this.TYPE.MSG_SEND_TURN_START + this.TYPE.SPLITTER;
         this.sendToSocket(data);
@@ -45,6 +52,7 @@ module.exports = class Player{
         shuffleArray(this.deck);
     }
     readyDeck(Card){
+        console.log("readying deck");
         this.allCards.forEach(element=>{
             this.deck.push(new Card(
                 element.id,
@@ -64,13 +72,18 @@ module.exports = class Player{
         //this.deck = this.deck.filter(element=> element !== null);
     }
     drawCards(amount = 5){
+        console.log("drawing cards");
         for(let ii = 0; ii < amount; ii++){
             this.hand.push(this.deck.pop());
         }
         const data = this.TYPE.MSG_SEND_DRAW_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.hand);
         this.sendToSocket(data);
+
+        const opponentData = this.TYPE.MSG_SEND_OPPONENT_DRAW_CARDS + this.TYPE.SPLITTER + JSON.stringify(amount);
+        this.opponent.sendToSocket(opponentData);
     }
     discardCards(){
+        console.log("discarding cards");
         const data = this.TYPE.MSG_SEND_DISCARD_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.hand);
 
         while(this.hand.length > 0){
@@ -78,15 +91,23 @@ module.exports = class Player{
         }
 
         this.sendToSocket(data);
+
+        const opponentData = this.TYPE.MSG_SEND_OPPONENT_DISCARD_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.hand.length);
+        this.opponent.sendToSocket(opponentData);
     }
     playCards(chosenCards){
+        console.log("playing cards");
         const array = getCardsByID(this.hand, chosenCards);
         addElementsToArray(this.inPlay, array);
         removeElementsFromArray(this.hand, array);
         //const data = this.TYPE.MSG_SEND_PLAY_CARDS + this.TYPE.SPLITTER + JSON.stringify(array);
         //this.sendToSocket(data);
+
+        const opponentData = this.TYPE.MSG_SEND_OPPONENT_PLAY_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.inPlay);
+        this.opponent.sendToSocket(opponentData);
     }
     removeDeadCards(card, index){
+        console.log("removing dead cards");
         this.discarded.push(this.inPlay[index]);
         this.inPlay[index] = undefined;
 
@@ -95,21 +116,26 @@ module.exports = class Player{
         const data = this.TYPE.MSG_SEND_DEAD_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.deadCards);
         this.sendToSocket(data);
 
+        const opponentData = this.TYPE.MSG_SEND_OPPONENT_DISCARD_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.deadCards);
+        this.opponent.sendToSocket(opponentData);
+
         this.deadCards.length = 0;
     }
 	sendAllCards(){
+        console.log("send all cards");
 		const data = this.TYPE.MSG_SEND_ALL_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.allCards);
 		this.sendToSocket(data);
     }
     sendEndOfTurnData(){
+        console.log("send end of turn data");
         const playCardsData = this.TYPE.MSG_SEND_PLAY_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.inPlay);
-        this.sendToSocket(playCardsData);
+        //this.sendToSocket(playCardsData);
 
         const inHandData = this.TYPE.MSG_SEND_PLAY_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.hand);
-        this.sendToSocket(inHandData);
+        //this.sendToSocket(inHandData);
 
         const discardedData = this.TYPE.MSG_SEND_DISCARD_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.discarded);
-        this.sendToSocket(discardedData);
+        //this.sendToSocket(discardedData);
     }
     sendToSocket(data){
         this.socket.send(data);

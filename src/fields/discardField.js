@@ -7,5 +7,11 @@ class DiscardField extends Field{
             element.drawFront();
         });
     }
-    
+    drawOpponentCards(){
+        this.cards.forEach(element => {
+            if(element){
+                element.drawBack();
+            }
+        });
+    }
 }

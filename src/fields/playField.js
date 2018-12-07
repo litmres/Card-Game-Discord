@@ -4,6 +4,10 @@ class PlayField extends Field{
         this.cards = [];
         this.fillPlayField();
     }
+    clear(){
+        this.cards.length = 0;
+        this.fillPlayField();
+    }
     onClick(){
         console.log("play")
     }

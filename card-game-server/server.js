@@ -31,10 +31,11 @@ const TYPE = {
     MSG_SEND_DEAD_CARDS:           	25,
     MSG_SEND_ONLINE_USERS:          26,
     MSG_SEND_ALL_CARDS:				27,
-    MSG_SEND_OPPONENT_DRAW_CARDS:    30,
-    MSG_SEND_OPPONENT_DISCARD_CARDS: 31,
-    MSG_SEND_OPPONENT_PLAY_CARDS:    32,
-    MSG_SEND_OPPONENT_DEAD_CARDS:    33,
+    MSG_SEND_OPPONENT_DRAW_CARDS:   30,
+    MSG_SEND_OPPONENT_DISCARD_CARDS:31,
+    MSG_SEND_OPPONENT_PLAY_CARDS:   32,
+    MSG_SEND_OPPONENT_DEAD_CARDS:   33,
+    MSG_SEND_MATCH_END:             40
 };
 const UNIQUE = {
 	id:0
@@ -140,6 +141,9 @@ function startMatch(rooms, queue){
     const battle = new BattleRoom(0, queue.getPlayer(), queue.getPlayer());
     rooms.push(battle);
     const players = battle.getPlayers();
+    players.forEach(element =>{
+        element.setOpponent(battle.getOpponent(element.id));
+    })
     players.forEach(element => {
         element.shuffleAllCards();
         element.readyDeck(Card);
@@ -147,7 +151,6 @@ function startMatch(rooms, queue){
 		sendMatchStarted(element, players.filter(value => ![players].includes(value))[0]);
         element.drawCards();
     });
-	
 }
 
 function sendMatchStarted(player, opponent){
@@ -199,7 +202,7 @@ function userSurrenders(player, rooms){
     console.log("user surrenders");
     const room = findPlayerRoom(player, rooms);
 
-    room.endRoom();
+    room.endRoom(player, TYPE, "player surrendered");
     rooms = removeElementsFromArray(rooms, [room]);
 }
 

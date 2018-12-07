@@ -17,4 +17,11 @@ class HandField extends Field{
         });
         console.log(this.cards);
     }
+    drawOpponentCards(){
+        this.cards.forEach(element => {
+            if(element){
+                element.drawBack();
+            }
+        });
+    }
 }
