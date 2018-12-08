@@ -1,4 +1,4 @@
-# display-members
+# Card-Game-Discord
 
 website to interact with the card game server and playing the game
 
