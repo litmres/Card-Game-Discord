@@ -1,5 +1,11 @@
 # display-members
 
-discord bot, that gives users levels etc
+website to interact with the card game server and playing the game
 
-website requests guild members and level data and creates cards out of them
+# Discord-bot server
+
+generates level attack and defense and saves it into the database
+
+# Card-Game server
+
+server for the card game
