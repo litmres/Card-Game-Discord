@@ -205,3 +205,6 @@ div{
     -webkit-text-stroke: 1px black;
 }
 
+.hidden{
+    display:none;
+}

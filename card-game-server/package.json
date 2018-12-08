@@ -1,0 +1,23 @@
+{
+  "name": "discord-card-game-server",
+  "version": "1.0.0",
+  "description": "server for playing the card game",
+  "main": "server.js",
+  "dependencies": {
+    "mongodb": "^3.1.10",
+    "ws": "^6.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "npm test",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "discord",
+    "server",
+	"card",
+	"game"
+  ],
+  "author": "twofist",
+  "license": "MIT"
+}
