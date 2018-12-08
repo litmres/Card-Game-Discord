@@ -20,6 +20,9 @@ module.exports = class Player{
         console.log("set opponent");
         this.opponent = opponent;
     }
+    getOpponent(){
+        return this.opponent;
+    }
     setDiscordID(discordID){
         console.log("set discord id");
         this.discordID = discordID;
@@ -100,10 +103,8 @@ module.exports = class Player{
         const array = getCardsByID(this.hand, chosenCards);
         addElementsToArray(this.inPlay, array);
         removeElementsFromArray(this.hand, array);
-        //const data = this.TYPE.MSG_SEND_PLAY_CARDS + this.TYPE.SPLITTER + JSON.stringify(array);
-        //this.sendToSocket(data);
-
-        const opponentData = this.TYPE.MSG_SEND_OPPONENT_PLAY_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.inPlay);
+        
+        const opponentData = this.TYPE.MSG_SEND_OPPONENT_PLAY_CARDS + this.TYPE.SPLITTER + JSON.stringify(reverseArray(this.inPlay));
         this.opponent.sendToSocket(opponentData);
     }
     removeDeadCards(card, index){
@@ -116,7 +117,7 @@ module.exports = class Player{
         const data = this.TYPE.MSG_SEND_DEAD_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.deadCards);
         this.sendToSocket(data);
 
-        const opponentData = this.TYPE.MSG_SEND_OPPONENT_DISCARD_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.deadCards);
+        const opponentData = this.TYPE.MSG_SEND_OPPONENT_DEAD_CARDS + this.TYPE.SPLITTER + JSON.stringify(this.deadCards);
         this.opponent.sendToSocket(opponentData);
 
         this.deadCards.length = 0;
@@ -151,6 +152,14 @@ function shuffleArray(array){
     return array
 }
 
+function reverseArray(array){
+    const reversed = [];
+    for(let ii = array.length-1; ii >= 0; ii--){
+        reversed.push(array[ii]);
+    }
+    return reversed;
+}
+
 /*
 function removeCards(from, to, selection){
     const add = from.filter(value => selection.includes(value.id));
@@ -182,15 +191,20 @@ function removeElementsFromArray(fromArray, toRemove){
 }
 
 function checkIdInArray(array, id){
-    const filtered = array.filter(element=> (element && element === id));
+    const filtered = array.filter(element=> (element && element.id === id));
     return filtered.length > 0;
+}
+
+function getCardInArrayByID(array, id){
+    const filtered = array.filter(element=> (element && element.id === id));
+    return filtered.shift();
 }
 
 function getCardsByID(hand, cardIdArray){
     const array = [];
-    hand.forEach(element=>{
-        if(checkIdInArray(cardIdArray, element.id)){
-            array.push(element);
+    cardIdArray.forEach(element=>{
+        if(element && checkIdInArray(hand, element)){
+            array.push(getCardInArrayByID(hand, element));
         }else{
             array.push(undefined);
         }

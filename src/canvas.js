@@ -161,8 +161,6 @@ function onMouseClickLeft(event) {
     player.setQueue(!player.getInQueue());
   }else if(player.getSurrenderButton().isEnabled() && isInside(cursor, player.getSurrenderButton())) {
     player.getSurrenderButton().onClick();
-  }else{
-    console.log("no button has been pressed");
   }
   
   if(ONCURSOR.length < 1){
@@ -172,7 +170,6 @@ function onMouseClickLeft(event) {
     if(!card) return;
     card.setOnCursor(true);
     ONCURSOR.push({card:card, originX: card.getPosition().x, originY:card.getPosition().y});
-    console.log("player clicked a card");
   }else{
     moveCardIntoPlay(ONCURSOR, player);
     ONCURSOR.length = 0;
@@ -193,6 +190,7 @@ function moveCardIntoPlay(onCursor, player){
 function onMouseClickRight(event){
   if(ONCURSOR.length > 0){
     ONCURSOR.forEach(element=>{
+      element.card.setOnCursor(false);
       element.card.setDestination(element.originX, element.originY, 80);
     });
     ONCURSOR.length = 0;
@@ -206,7 +204,7 @@ function onMouseMove(event) {
 
   if(ONCURSOR.length < 1){
     player.getPlayCards().forEach(element => {
-      if(!element.isEmpty) return;
+      if(!element.getEmpty()) return;
       element.setLit(false);
     });
   }else{
@@ -219,7 +217,7 @@ function lightUpClosestField(player, onCursor){
   if(onCursor.length < 1) return;
   const array = [];
   player.getPlayCards().forEach(element => {
-    if(!element.isEmpty) return;
+    if(!element.getEmpty()) return;
     onCursor.forEach(cursorCard =>{
       const obj = {
         distance: element.getDistance(cursorCard.card.x, element.x, cursorCard.card.y, element.y),

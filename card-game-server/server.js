@@ -115,14 +115,16 @@ function nextTurn(room){
 
 function cardsFight(players){
     console.log("cards fighting")
-    for(let ii = 0; ii < 5; ii++){
-        const p1Card = players[0].getCardInPlay(ii);
-        const p2Card = players[1].getCardInPlay(ii);
-        if(p1Card && p2Card){
-            p1Card.lowerDefense(p2Card.attack);
-            p2Card.lowerDefense(p1Card.attack);
-        }
-    }
+    players.forEach(player=>{
+        player.getInPlay().forEach((card, index)=>{
+            if(card){
+                const opponentCard = reverseArray(player.getOpponent().getInPlay())[index];
+                if(opponentCard){
+                    card.lowerDefense(opponentCard.getAttack());
+                }
+            }
+        });
+    });
 
     players.forEach(element => {
         element.getInPlay().forEach((card, index) => {
@@ -268,6 +270,14 @@ function addCards(array, allCards){
 function removeElementsFromArray(fromArray, toRemove){
     const removed = fromArray.filter(element => !toRemove.includes(element));
     return removed;
+}
+
+function reverseArray(array){
+    const reversed = [];
+    for(let ii = array.length-1; ii >= 0; ii--){
+        reversed.push(array[ii]);
+    }
+    return reversed;
 }
 
 function getDateTime() {

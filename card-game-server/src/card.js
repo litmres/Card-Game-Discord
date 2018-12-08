@@ -20,6 +20,9 @@ module.exports = class Card{
     getPosition(){
         return this.position;
     }
+    getAttack(){
+        return this.attack;
+    }
     setPosition(number){
         this.position = number;
     }

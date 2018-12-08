@@ -101,10 +101,16 @@ class Opponent{
     }
     deadCards(cards){
         console.log("Opponent: removing dead cards");
+        console.log(cards);
         this.playField.getCards().forEach((element, index)=>{
-            if(element.getCard() && this.checkIdInArray(cards, element.getCard().serverData.id)){
+            const card = element.getCard();
+            if(card){
+                console.log(card, cards, card.serverData.id);
+            }
+            if(card && this.checkIdInArray(cards, card.serverData.id)){
                 setTimeout(() => {
-                    this.discardField.addCard(element.getCard());
+                    console.log(card);
+                    this.discardField.addCard(card);
                     element.setCard(undefined);
                 }, 300*index);
             }

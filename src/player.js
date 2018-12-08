@@ -36,8 +36,8 @@ class Player{
     getHandCards(){
         return this.handField.getCards();
     }
-    removeHandCard(){
-        this.handField.removeHandCard();
+    removeHandCard(card){
+        this.handField.removeHandCard(card);
     }
     getQueueButton(){
         return this.queueButton;

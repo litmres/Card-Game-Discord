@@ -9,13 +9,12 @@ class HandField extends Field{
             }
         });
     }
-    removeHandCard(){
+    removeHandCard(card){
         this.cards.forEach((element,index)=>{
-          if(element && element.getOnCursor()){
+          if(element && element.getOnCursor() && card.serverData.id === element.serverData.id){
             this.cards[index] = undefined;
           }
         });
-        console.log(this.cards);
     }
     drawOpponentCards(){
         this.cards.forEach(element => {
