@@ -26,7 +26,7 @@ const TYPE = {
     MSG_RECEIVE_MATCH_END:              40,
 };
 
-const socket = new WebSocket('ws://localhost:9091');
+const socket = new WebSocket('wss://discord-card-game-server.herokuapp.com/');
 
 socket.addEventListener('open', function(event) {
     console.log("connected succesfully");
