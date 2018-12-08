@@ -16,6 +16,18 @@ module.exports = class Player{
         this.TYPE = TYPE;
         this.opponent = undefined;
     }
+    getCombinedStats(){
+        let total = 0;
+        this.inPlay.forEach(element=>{
+            if(element){
+                total+=(element.getAttack()+element.getCurrentDefense());
+            }
+        });
+        return {total: total,player: this}
+    }
+    getCurrentDeckSize(){
+        return this.deck.length;
+    }
     setOpponent(opponent){
         console.log("set opponent");
         this.opponent = opponent;
@@ -139,7 +151,11 @@ module.exports = class Player{
         //this.sendToSocket(discardedData);
     }
     sendToSocket(data){
-        this.socket.send(data);
+        if(this.socket.readyState !== 3){
+            this.socket.send(data);
+        }else{
+            console.log("socket is not open");
+        }
     }
 }
 

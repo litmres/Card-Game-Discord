@@ -34,6 +34,9 @@ class Card{
     getFrontCard(){
       return this.front.src;
     }
+    getCurrentDefense(){
+      return this.serverData.currentDefense;
+    }
     setOnCursor(bool){
       this.onCursor = bool;
     }

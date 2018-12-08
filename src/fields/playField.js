@@ -2,7 +2,21 @@ class PlayField extends Field{
     constructor(ctx, x, y, w, h, color, maxSize, socket){
         super(ctx, x, y, w, h, color, maxSize, socket);
         this.cards = [];
+        this.ready = 0;
+        this.counter = 0;
         this.fillPlayField();
+    }
+    addToCounter(){
+        this.counter++;
+    }
+    readyUp(){
+        this.ready++;
+    }
+    resetReady(){
+        this.ready = 0;
+    }
+    getReady(){
+        return this.ready >= this.counter;
     }
     clear(){
         this.cards.length = 0;

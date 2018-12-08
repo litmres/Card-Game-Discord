@@ -18,11 +18,7 @@ class EmptyCardField{
     }
     setCard(card){
         this.card = card;
-        if(card){
-            this.setEmpty(!card);
-        }else{
-            this.setEmpty(!!card);
-        }
+        this.setEmpty(!card);
     }
     getCard(){
         return this.card;

@@ -48,7 +48,12 @@ function receivedAllCards(members){
     }
 	
     members.forEach(element => {
-        element.image = "https://cdn.discordapp.com/avatars/93872440244969472/f977f194d987d21a6adbc6ec8423c1a9.webp";
+        if(!element.name){
+            element.name = "PlaceHolder"
+        }
+        if(!element.image){
+            element.image = "assets/placeholder.png"
+        }
         const obj = {
             attack: element.attack,
             defense: element.defense,

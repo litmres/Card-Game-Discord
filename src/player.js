@@ -161,7 +161,8 @@ class Player{
         this.deckField.clear();
         this.discardField.clear();
         this.handField.clear();
-        this.QueueButton.clear();
+        this.queueButton.clear();
+        alert(JSON.stringify(data));
     }
     turnStart(){
         console.log("turn start")

@@ -66,19 +66,20 @@ wss.on('connection', function connection(ws, req) {
 	});
 	
 	ws.on('close', () => {
-        ONLINEUSERS = userDisconnected(ONLINEUSERS, QUEUE, user);
+        ONLINEUSERS = userDisconnected(ONLINEUSERS, QUEUE, user, ROOMS);
+        broadCastOnlineUsers(ONLINEUSERS);
     });
 	
     ws.on('message', function(data) {
         const type = parseInt(extractType(data, TYPE.SPLITTER));
         switch(type){
-            case TYPE.MSG_RECEIVE_CONNECTED: userConnected(ONLINEUSERS);
+            case TYPE.MSG_RECEIVE_CONNECTED: broadCastOnlineUsers(ONLINEUSERS);
             break;
             case TYPE.MSG_RECEIVE_JOIN_QUEUE: userJoinQueue(QUEUE, user);
             break;
             case TYPE.MSG_RECEIVE_USERNAME: 0;
             break;
-            case TYPE.MSG_RECEIVE_DISCONNECTED: userDisconnected(ONLINEUSERS, QUEUE, user);
+            case TYPE.MSG_RECEIVE_DISCONNECTED: console.log("user disconnected");
             break;
             case TYPE.MSG_RECEIVE_LEAVE_QUEUE: userLeavesQueue(QUEUE, user);
             break;
@@ -105,10 +106,17 @@ function userRequestsAllCards(player){
 	player.sendAllCards();
 }
 
-function nextTurn(room){
+function nextTurn(room, rooms){
     room.getPlayers().forEach(element=>element.sendEndOfTurnData());
     cardsFight(room.getPlayers());
     room.getPlayers().forEach(element=>element.sendEndOfTurnData());
+
+    if(room.checkWinCondition()){
+        room.endRoom(room.getLoser(), TYPE, "player lost");
+        rooms = removeElementsFromArray(rooms, [room]);
+    }
+
+
     room.getPlayers().forEach(element => element.beginTurn());
     room.getPlayers().forEach(element => element.drawCards());
 }
@@ -196,7 +204,7 @@ function userEndsTurn(player, rooms){
     room.getPlayer(player.id).discardCards();
 
     if(room.getPlayersEndedTurn()){
-        nextTurn(room);
+        nextTurn(room, rooms);
     }
 }
 
@@ -208,13 +216,23 @@ function userSurrenders(player, rooms){
     rooms = removeElementsFromArray(rooms, [room]);
 }
 
-function userDisconnected(array, queue, user){
+function userLeftTheGame(player, rooms){
+    const room = findPlayerRoom(player, rooms);
+    if(room){
+        console.log("user left the game");
+        room.endRoom(player, TYPE, "player disconnected");
+        rooms = removeElementsFromArray(rooms, [room]);
+    }
+}
+
+function userDisconnected(array, queue, user, rooms){
     console.log("user disconnected");
+    userLeftTheGame(user, rooms);
 	queue.removePlayer([user]);
     return removeElementsFromArray(array, [user]);
 }
 
-function userConnected(allUsers){
+function broadCastOnlineUsers(allUsers){
     const data = TYPE.MSG_SEND_ONLINE_USERS + TYPE.SPLITTER + JSON.stringify(allUsers.length);
     broadcastMessage(allUsers, data)
 }

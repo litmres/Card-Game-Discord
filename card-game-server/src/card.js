@@ -11,6 +11,9 @@ module.exports = class Card{
         this.isSpecial = isSpecial;
         this.position = position;
     }
+    getCurrentDefense(){
+        return this.currentDefense;
+    }
     lowerDefense(amount){
         this.currentDefense-=amount;
     }

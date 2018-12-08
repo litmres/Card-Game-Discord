@@ -88,11 +88,13 @@ class Opponent{
 
         array.forEach((element, index)=>{
             if(element){
+                this.playField.addToCounter();
                 setTimeout(() => {
                     this.playField.getCards()[index].setCard(element);
                     const x = this.playField.getCards()[index].getPosition().x;
                     const y = this.playField.getCards()[index].getPosition().y;
                     element.setDestination(x,y);
+                    this.playField.readyUp();
                 }, 300*index);
             }
         });
@@ -101,20 +103,22 @@ class Opponent{
     }
     deadCards(cards){
         console.log("Opponent: removing dead cards");
-        console.log(cards);
-        this.playField.getCards().forEach((element, index)=>{
-            const card = element.getCard();
-            if(card){
-                console.log(card, cards, card.serverData.id);
-            }
-            if(card && this.checkIdInArray(cards, card.serverData.id)){
-                setTimeout(() => {
-                    console.log(card);
-                    this.discardField.addCard(card);
-                    element.setCard(undefined);
-                }, 300*index);
-            }
-        });
+        const wait = setInterval(()=>{
+            if(!this.playField.getReady()) return;
+            this.playField.getCards().forEach((element, index)=>{
+                if(element.getCard() && this.checkIdInArray(cards, element.getCard().serverData.id)){
+                    setTimeout(() => {
+                        this.discardField.addCard(element.getCard());
+                        element.setCard(undefined);
+                    }, 300*index);
+                }
+            });
+            clearInterval(wait);
+        },200);
+    }
+    checkCardsReady(array){
+        const filtered = array.filter(element=> (element && element.id === id));
+        return filtered.length >= this.maxSize;
     }
     checkIdInArray(array, id){
         const filtered = array.filter(element=> (element && element.id === id));
