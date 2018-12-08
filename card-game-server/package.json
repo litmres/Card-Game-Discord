@@ -1,11 +1,11 @@
 {
-  "name": "card-game-discord-bot",
+  "name": "discord-card-game-server",
   "version": "1.0.0",
-  "description": "saves levels and stats into db",
+  "description": "server for playing the card game",
   "main": "server.js",
   "dependencies": {
-    "discord.js": "^11.4.2",
-    "mongodb": "^3.1.10"
+    "mongodb": "^3.1.10",
+    "ws": "^6.0.0"
   },
   "devDependencies": {},
   "scripts": {
@@ -14,10 +14,9 @@
   },
   "keywords": [
     "discord",
-    "bot",
-	"server",
-	"game",
-	"card"
+    "server",
+	"card",
+	"game"
   ],
   "author": "twofist",
   "license": "MIT"
