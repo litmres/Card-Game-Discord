@@ -278,6 +278,8 @@ socket.addEventListener('message', function(event) {
       opponent.matchEnd();
       player.matchEnd(data);
   break;
+  case TYPE.MSG_RECEIVE_PING: player.heartBeat();
+  break;
       default: console.log("type not found", event.data);
   }
 });

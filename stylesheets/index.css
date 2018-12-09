@@ -39,6 +39,8 @@ div{
     position:fixed;
     font: bold 30px arial, sans-serif;
     color:white;
+    display:none;
+    visibility: hidden;
 }
 
 .canvas-option{
@@ -208,3 +210,37 @@ div{
 .hidden{
     display:none;
 }
+
+.heroku {
+    margin:auto;
+    font: bold 30px arial, sans-serif;
+    color:white;
+}
+
+.error {
+    margin: auto;
+    font: bold 30px arial, sans-serif;
+    color:red;
+}
+
+.loader {
+    margin:auto;
+    border: 10px solid green;
+    border-radius: 50%;
+    border-top: 10px solid black;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 1s linear infinite; /* Safari */
+    animation: spin 1s linear infinite;
+  }
+  
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

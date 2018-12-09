@@ -51,6 +51,10 @@ class Player{
     setEndTurn(turn){
 		this.endTurn = turn;
     }
+    heartBeat(){
+        const data = TYPE.MSG_SEND_PONG;
+        this.sendToSocket(data);
+    }
     drawButtons(){
         this.getEndTurnButton().setEnabled(!!this.inBattle);
         this.getSurrenderButton().setEnabled(!!this.inBattle);
