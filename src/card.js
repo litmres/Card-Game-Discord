@@ -34,6 +34,9 @@ class Card{
     getFrontCard(){
       return this.front.src;
     }
+    getDefense(){
+      return this.serverData.defense;
+    }
     getCurrentDefense(){
       return this.serverData.currentDefense;
     }
@@ -102,7 +105,41 @@ class Card{
     }
     drawFront(){
       this.moveToDestination();
+
       this.ctx.drawImage(this.front, this.x, this.y, this.frontWidth, this.frontHeight);
+
+      const imgd = this.ctx.getImageData(this.x, this.y, this.frontWidth, this.frontHeight),
+      const pix = imgd.data,
+      const newColor = {r:0,g:0,b:0, a:0};
+  
+      for (var i = 0, n = pix.length; i <n; i += 4) {
+        var r = pix[i],
+        g = pix[i+1],
+        b = pix[i+2];
+      
+        if(r == 255&& g == 255 && b == 255){ 
+          // Change the white to the new color.
+          pix[i] = newColor.r;
+          pix[i+1] = newColor.g;
+          pix[i+2] = newColor.b;
+          pix[i+3] = newColor.a;
+        }
+      }
+      
+      ctx.putImageData(imgd, 0, 0);
+
+
+
+
+      
+
+      if(this.getDefense() > this.getCurrentDefense()){
+        drawDamageTaken();
+      }
+    }
+    drawDamageTaken(){
+      this.ctx.font = "60px Arial";
+      this.ctx.fillText(`- ${this.getDefense() - this.getCurrentDefense()}`,this.x + this.width,this.y);
     }
     drawBack(){
       this.moveToDestination();
