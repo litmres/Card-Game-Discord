@@ -79,16 +79,15 @@ function animate(){
 
   ctx.scale(gameScale,gameScale);
 
-  player.drawFields();
-  player.drawFieldCards();
-  player.drawButtons();
-  player.drawOnlineUsers();
-
   if(player.isInBattle()){
     opponent.drawFields();
     opponent.drawFieldCards();
   }
-  
+
+  player.drawFields();
+  player.drawButtons();
+  player.drawFieldCards();
+  player.drawOnlineUsers();
   
   /*
   cardDeck.forEach(element => element.drawBack());
