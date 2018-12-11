@@ -282,3 +282,43 @@ socket.addEventListener('message', function(event) {
       default: console.log("type not found", event.data);
   }
 });
+
+
+
+
+
+function getElementPosition(obj) {
+  let curleft = 0
+  let curtop = 0;
+  if (obj.offsetParent) {
+      do {
+          curleft += obj.offsetLeft;
+          curtop += obj.offsetTop;
+      } while (obj = obj.offsetParent);
+      return { x: curleft, y: curtop };
+  }
+  return undefined;
+}
+
+function getEventLocation(element,event){
+  const pos = getElementPosition(element);
+  
+  return {
+    x: (event.pageX - pos.x),
+      y: (event.pageY - pos.y)
+  };
+}
+
+canvas.addEventListener("click",function(event){
+  
+  const eventLocation = getEventLocation(this,event);
+  
+  const context = this.getContext('2d');
+  const pixelData = context.getImageData(eventLocation.x, eventLocation.y, 1, 1).data; 
+
+  console.log(pixelData)
+  if((pixelData[0] == 0) && (pixelData[1] == 0) && (pixelData[2] == 0) && (pixelData[3] == 0)){
+      console.log("transparent")
+  }
+
+},false);
