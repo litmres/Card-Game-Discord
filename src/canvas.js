@@ -177,11 +177,12 @@ function onMouseClickLeft(event) {
 
 function moveCardIntoPlay(onCursor, player){
   const litField = player.getPlayCards().filter(element => element.getLit()).shift();
+  if(!litField) return;
   onCursor.forEach(element=>{
     litField.setCard(element.card);
     player.removeHandCard(element.card);
     element.card.setOnCursor(false);
-    element.card.setDestination(litField.getPosition().x, litField.getPosition().y);
+    element.card.setDestination(litField.getPosition().x-element.card.getSize().width/5, litField.getPosition().y-element.card.getSize().height/8);
   });
   onCursor.length = 0;
 }
@@ -198,7 +199,12 @@ function onMouseClickRight(event){
 
 function onMouseMove(event) {
   event.stopPropagation();
+
   const cursor = getMousePos(canvas, event, gameScale);
+	player.getEndTurnButton().setHover(isInside(cursor, player.getEndTurnButton()));
+  player.getQueueButton().setHover(isInside(cursor, player.getQueueButton()));
+  player.getSurrenderButton().setHover(isInside(cursor, player.getSurrenderButton()));
+    
   moveCardWithMouse(cursor, ONCURSOR);
 
   if(ONCURSOR.length < 1){
