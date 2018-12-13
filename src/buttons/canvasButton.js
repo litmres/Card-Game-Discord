@@ -69,14 +69,17 @@ class Button{
       const left = this.x;
       const right = this.x + this.width;
 
-      this.particles = this.particles.filter(element => !element.inside(this.x, this.y, this.width, this.height));
-
+      this.particles = this.particles.filter(element => element.inside(this.x, this.y, this.width, this.height));
+     
       while(this.particleAmount > this.particles.length){
         const x = this.getRandomNumber(left, right);
         const y = this.getRandomNumber(bottom, top);
         const dx = this.getRandomNumber(0, 500);
         const dy = this.getRandomNumber(0, 500);
-        this.particles.push(new Particle(x, y, dx, dy, "blue", 20, this.ctx));
+        const angle = this.getRandomNumber(0, 360);
+        const radius = this.getRandomNumber(3, 20);
+        const alpha = this.getRandomNumber(0,4)/10;
+        this.particles.push(new Particle(x, y, angle, "blue", "darkblue", alpha, radius, this.ctx));
       }
 
       this.particles.forEach(element=>{
