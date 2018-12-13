@@ -219,7 +219,10 @@ function chosenOption(num){
         canvas.style.visibility = "visible";
         const ctx=canvas.getContext("2d");
         ctx.font = "30px Arial";
-        ctx.fillText("Waiting for Cards to Load...",50,50);
+        const text = "Waiting for Cards to Load...";
+        const fontWidth = ctx.measureText(text).width;
+        const equalOffsetX = (ctx.canvas.width - fontWidth)/2;
+        ctx.fillText(text,equalOffsetX,50);
 
         const container = document.getElementsByClassName("container")[0];
         container.style.visibility = "visible";

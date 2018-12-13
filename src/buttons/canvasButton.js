@@ -18,6 +18,9 @@ class Button{
     }
     setHover(bool){
       this.hover = bool;
+      if(!this.hover){
+        this.particles.length = 0;
+      }
     }
     draw(){
       if(!this.enabled) return;
@@ -78,7 +81,7 @@ class Button{
         const dy = this.getRandomNumber(0, 500);
         const angle = this.getRandomNumber(0, 360);
         const radius = this.getRandomNumber(3, 20);
-        const alpha = this.getRandomNumber(0,4)/10;
+        const alpha = this.getRandomNumber(0,2)/10;
         this.particles.push(new Particle(x, y, angle, "blue", "darkblue", alpha, radius, this.ctx));
       }
 

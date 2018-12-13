@@ -23,16 +23,19 @@ const player = new Player(socket, ctx, DECKSIZE, RENDEREDCARDS, cw, ch, gameScal
 
 function createCards(){
   ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
-  ctx.font = "30px Arial";
-  ctx.fillText("Rendering Cards...",50,50);
   
   const container = document.getElementsByClassName("container")[0];
   for (let item of container.children) {
     UNRENDEREDCARDS.push(item);
   }
   
+  const circle = new LoadingCircle(ctx.canvas.width/2, 200, 80, "green", ctx);
+
   for(let ii = 0; ii < UNRENDEREDCARDS.length; ii++){
-    render(UNRENDEREDCARDS[ii], CARDBACK);
+    render(UNRENDEREDCARDS[ii], CARDBACK, circle);
+    const percentage = 1/UNRENDEREDCARDS.length*100/2;
+    drawCircle(circle, percentage, ctx.canvas);
+    drawRenderText(ctx);
   }
 
   const interval = setInterval(()=>{
@@ -49,7 +52,7 @@ function createCards(){
   }, 500);
 }
 
-function render(card, cardBack){
+function render(card, cardBack, circle){
   domtoimage.toPng(card, {
     width:190,
     height:300,
@@ -60,10 +63,28 @@ function render(card, cardBack){
         front:dataUrl,
         back:cardBack,
       });
+      const percentage =  1/UNRENDEREDCARDS.length*100/2;
+      drawCircle(circle, percentage, ctx.canvas);
+      drawRenderText(ctx);
     })
     .catch(function (error) {
         console.error('oops, something went wrong!', error);
     });
+}
+
+function drawRenderText(context){
+  context.font = "30px Arial";
+  const text = "Rendering Cards...";
+  const fontWidth = context.measureText(text).width;
+  const equalOffsetX = (context.canvas.width - fontWidth)/2;
+  context.fillStyle = "black";
+  context.fillText(text,equalOffsetX,50);
+}
+
+function drawCircle(circle, percentage, canvas){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  circle.setPercent(percentage)
+  circle.draw();
 }
 
 function start(){

@@ -176,6 +176,7 @@ class Player{
     }
     drawOnlineUsers(){
         if(this.inBattle) return;
+        this.ctx.fillStyle = "black";
         this.ctx.font = "60px Arial";
         const x = this.getQueueButton().getPosition().x;
         const y = this.getQueueButton().getPosition().y - 20;
