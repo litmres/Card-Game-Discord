@@ -23,16 +23,19 @@ const player = new Player(socket, ctx, DECKSIZE, RENDEREDCARDS, cw, ch, gameScal
 
 function createCards(){
   ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
-  ctx.font = "30px Arial";
-  ctx.fillText("Rendering Cards...",50,50);
   
   const container = document.getElementsByClassName("container")[0];
   for (let item of container.children) {
     UNRENDEREDCARDS.push(item);
   }
   
+  const circle = new LoadingCircle(ctx.canvas.width/2, 200, 80, "green", ctx);
+
   for(let ii = 0; ii < UNRENDEREDCARDS.length; ii++){
-    render(UNRENDEREDCARDS[ii], CARDBACK);
+    render(UNRENDEREDCARDS[ii], CARDBACK, circle);
+    const percentage = 1/UNRENDEREDCARDS.length*100/2;
+    drawCircle(circle, percentage, ctx.canvas);
+    drawRenderText(ctx);
   }
 
   const interval = setInterval(()=>{
@@ -49,7 +52,7 @@ function createCards(){
   }, 500);
 }
 
-function render(card, cardBack){
+function render(card, cardBack, circle){
   domtoimage.toPng(card, {
     width:190,
     height:300,
@@ -60,10 +63,28 @@ function render(card, cardBack){
         front:dataUrl,
         back:cardBack,
       });
+      const percentage =  1/UNRENDEREDCARDS.length*100/2;
+      drawCircle(circle, percentage, ctx.canvas);
+      drawRenderText(ctx);
     })
     .catch(function (error) {
         console.error('oops, something went wrong!', error);
     });
+}
+
+function drawRenderText(context){
+  context.font = "30px Arial";
+  const text = "Rendering Cards...";
+  const fontWidth = context.measureText(text).width;
+  const equalOffsetX = (context.canvas.width - fontWidth)/2;
+  context.fillStyle = "black";
+  context.fillText(text,equalOffsetX,50);
+}
+
+function drawCircle(circle, percentage, canvas){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  circle.setPercent(percentage)
+  circle.draw();
 }
 
 function start(){
@@ -79,16 +100,15 @@ function animate(){
 
   ctx.scale(gameScale,gameScale);
 
-  player.drawFields();
-  player.drawFieldCards();
-  player.drawButtons();
-  player.drawOnlineUsers();
-
   if(player.isInBattle()){
     opponent.drawFields();
     opponent.drawFieldCards();
   }
-  
+
+  player.drawFields();
+  player.drawButtons();
+  player.drawFieldCards();
+  player.drawOnlineUsers();
   
   /*
   cardDeck.forEach(element => element.drawBack());
@@ -178,11 +198,12 @@ function onMouseClickLeft(event) {
 
 function moveCardIntoPlay(onCursor, player){
   const litField = player.getPlayCards().filter(element => element.getLit()).shift();
+  if(!litField) return;
   onCursor.forEach(element=>{
     litField.setCard(element.card);
     player.removeHandCard(element.card);
     element.card.setOnCursor(false);
-    element.card.setDestination(litField.getPosition().x, litField.getPosition().y);
+    element.card.setDestination(litField.getPosition().x-element.card.getSize().width/5, litField.getPosition().y-element.card.getSize().height/8);
   });
   onCursor.length = 0;
 }
@@ -199,7 +220,12 @@ function onMouseClickRight(event){
 
 function onMouseMove(event) {
   event.stopPropagation();
+
   const cursor = getMousePos(canvas, event, gameScale);
+	player.getEndTurnButton().setHover(isInside(cursor, player.getEndTurnButton()));
+  player.getQueueButton().setHover(isInside(cursor, player.getQueueButton()));
+  player.getSurrenderButton().setHover(isInside(cursor, player.getSurrenderButton()));
+    
   moveCardWithMouse(cursor, ONCURSOR);
 
   if(ONCURSOR.length < 1){
@@ -278,6 +304,50 @@ socket.addEventListener('message', function(event) {
       opponent.matchEnd();
       player.matchEnd(data);
   break;
+  case TYPE.MSG_RECEIVE_PING: player.heartBeat();
+  break;
       default: console.log("type not found", event.data);
   }
 });
+
+
+
+/*
+
+function getElementPosition(obj) {
+  let curleft = 0
+  let curtop = 0;
+  if (obj.offsetParent) {
+      do {
+          curleft += obj.offsetLeft;
+          curtop += obj.offsetTop;
+      } while (obj = obj.offsetParent);
+      return { x: curleft, y: curtop };
+  }
+  return undefined;
+}
+
+function getEventLocation(element,event){
+  const pos = getElementPosition(element);
+  
+  return {
+    x: (event.pageX - pos.x),
+      y: (event.pageY - pos.y)
+  };
+}
+
+canvas.addEventListener("click",function(event){
+  
+  const eventLocation = getEventLocation(this,event);
+  
+  const context = this.getContext('2d');
+  const pixelData = context.getImageData(eventLocation.x, eventLocation.y, 1, 1).data; 
+
+  console.log(pixelData)
+  if((pixelData[0] == 0) && (pixelData[1] == 0) && (pixelData[2] == 0) && (pixelData[3] == 0)){
+      console.log("transparent")
+  }
+
+},false);
+
+*/

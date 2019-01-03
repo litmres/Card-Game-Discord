@@ -15,6 +15,24 @@ module.exports = class Player{
         this.endTurn = false;
         this.TYPE = TYPE;
         this.opponent = undefined;
+        this.heartBeatTimer();
+    }
+    setHeartBeat(bool){
+        this.socket.isAlive = bool;
+    }
+    getHeartBeat(){
+        return !!this.socket.isAlive;
+    }
+    terminateSocket(){
+        this.socket.terminate();
+    }
+    heartBeatTimer(){
+        setInterval(()=> {
+            if(!this.getHeartBeat()) return this.terminateSocket();
+            this.setHeartBeat(false);
+            const data = this.TYPE.MSG_SEND_PING + this.TYPE.SPLITTER;
+            this.sendToSocket(data);
+        }, 30000);
     }
     getCombinedStats(){
         let total = 0;

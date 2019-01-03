@@ -51,6 +51,10 @@ class Player{
     setEndTurn(turn){
 		this.endTurn = turn;
     }
+    heartBeat(){
+        const data = TYPE.MSG_SEND_PONG;
+        this.sendToSocket(data);
+    }
     drawButtons(){
         this.getEndTurnButton().setEnabled(!!this.inBattle);
         this.getSurrenderButton().setEnabled(!!this.inBattle);
@@ -172,6 +176,7 @@ class Player{
     }
     drawOnlineUsers(){
         if(this.inBattle) return;
+        this.ctx.fillStyle = "black";
         this.ctx.font = "60px Arial";
         const x = this.getQueueButton().getPosition().x;
         const y = this.getQueueButton().getPosition().y - 20;

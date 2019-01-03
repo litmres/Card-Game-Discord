@@ -93,7 +93,7 @@ class Opponent{
                     this.playField.getCards()[index].setCard(element);
                     const x = this.playField.getCards()[index].getPosition().x;
                     const y = this.playField.getCards()[index].getPosition().y;
-                    element.setDestination(x,y);
+                    element.setDestination(x-element.getSize().width/5,y-element.getSize().height/8);
                     this.playField.readyUp();
                 }, 300*index);
             }

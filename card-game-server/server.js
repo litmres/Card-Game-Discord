@@ -22,6 +22,7 @@ const TYPE = {
     MSG_RECEIVE_SURRENDER:          7,
     MSG_RECEIVE_END_TURN: 	        8,
     MSG_RECEIVE_PLAY_CARDS:         9,
+    MSG_RECEIVE_PONG:               10,
     SPLITTER:                       "-->",
     MSG_SEND_MATCH_START:	        20,
     MSG_SEND_TURN_START:	        21,
@@ -35,7 +36,8 @@ const TYPE = {
     MSG_SEND_OPPONENT_DISCARD_CARDS:31,
     MSG_SEND_OPPONENT_PLAY_CARDS:   32,
     MSG_SEND_OPPONENT_DEAD_CARDS:   33,
-    MSG_SEND_MATCH_END:             40
+    MSG_SEND_MATCH_END:             40,
+    MSG_SEND_PING:                  51,
 };
 const UNIQUE = {
 	id:0
@@ -50,6 +52,7 @@ const wss = new WebSocket.Server({
 
 wss.on('connection', function connection(ws, req) {
     console.log("someone reached the server", getDateTime());
+
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     
     addCards(dataBase.getCollectionObjAsArray(), ALLCARDS);
@@ -63,7 +66,7 @@ wss.on('connection', function connection(ws, req) {
 
 	ws.on('error', (err) => {
 		console.log(err);
-	});
+    });
 	
 	ws.on('close', () => {
         ONLINEUSERS = userDisconnected(ONLINEUSERS, QUEUE, user, ROOMS);
@@ -71,6 +74,7 @@ wss.on('connection', function connection(ws, req) {
     });
 	
     ws.on('message', function(data) {
+        ws.isAlive = true;
         const type = parseInt(extractType(data, TYPE.SPLITTER));
         switch(type){
             case TYPE.MSG_RECEIVE_CONNECTED: broadCastOnlineUsers(ONLINEUSERS);
@@ -90,11 +94,17 @@ wss.on('connection', function connection(ws, req) {
             case TYPE.MSG_RECEIVE_PLAY_CARDS: userPlaysCards(user, data, TYPE.SPLITTER);
             break;
 			case TYPE.MSG_RECEIVE_GET_ALL_CARDS: userRequestsAllCards(user, ALLCARDS);
-			break;
+            break;
+            case TYPE.MSG_RECEIVE_PONG: pingPongResponse(user);
+            break;
             default: console.log("type not found", data);
         }
     });
 });
+
+function pingPongResponse(player){
+    player.setHeartBeat(true);
+}
 
 setInterval(()=>{
     if(matchPossible(QUEUE)){

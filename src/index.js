@@ -10,6 +10,7 @@ const TYPE = {
     MSG_SEND_SURRENDER:                 7,
     MSG_SEND_END_TURN: 	                8,
     MSG_SEND_PLAY_CARDS:                9,
+    MSG_SEND_PONG:                      10,
     SPLITTER:                           "-->",
     MSG_RECEIVE_MATCH_START:	        20,
     MSG_RECEIVE_TURN_START:	            21,
@@ -24,22 +25,62 @@ const TYPE = {
     MSG_RECEIVE_OPPONENT_PLAY_CARDS:    32,
     MSG_RECEIVE_OPPONENT_DEAD_CARDS:    33,
     MSG_RECEIVE_MATCH_END:              40,
+    MSG_RECEIVE_PING:                   51,
 };
 
 const socket = new WebSocket('wss://discord-card-game-server.herokuapp.com/');
-
+//wss://discord-card-game-server.herokuapp.com/
 socket.addEventListener('open', function(event) {
     console.log("connected succesfully");
+    closeLoader();
+    showOption();
     socket.send(TYPE.MSG_SEND_CONNECTED);
     socket.send(TYPE.MSG_SEND_GET_ALL_CARDS);
 });
+
 socket.addEventListener('close', function(event) {
     console.log("disconnected...");
+    showError("connection has been closed");
 });
 socket.addEventListener('error', function(event) {
     console.log("an error has occured!");
+    showError("an error has occured while trying to connect to the server");
 });
 
+function showError(error){
+    const herokuContainer = document.getElementById("herokuContainer");
+    herokuContainer.style.visibility = "visible";
+    herokuContainer.style.display = "inline-block";
+
+    const herokuError = document.getElementById("herokuError");
+    herokuError.style.visibility = "visible";
+    herokuError.style.display = "inline-block";
+
+    const herokuConnecting = document.getElementById("herokuConnecting");
+    herokuConnecting.style.visibility = "hidden";
+    herokuConnecting.style.display = "none";
+
+    const herokuLoader = document.getElementById("herokuLoader");
+    herokuLoader.style.visibility = "hidden";
+    herokuLoader.style.display = "none";
+
+    const errorDiv = document.createElement("div");
+    errorDiv.setAttribute("class", "errorDiv");
+    errorDiv.appendChild(document.createTextNode(error));
+    herokuError.appendChild(errorDiv);
+}
+
+function closeLoader(){
+    const element = document.getElementById("herokuContainer");
+    element.style.visibility = "hidden";
+    element.style.display = "none";
+}
+
+function showOption(){
+    const option = document.getElementById("option");
+    option.style.visibility = "visible";
+    option.style.display = "inline-block";
+}
 
 function receivedAllCards(members){
     const container = document.getElementsByClassName("container")[0];
@@ -62,12 +103,19 @@ function receivedAllCards(members){
             description: element.description,
             image: element.image,
             name: element.name,
+            placeholder: "usePlaceHolderImage(this)",
             id: element.id,
             isSpecial: element.isSpecial,
             position: element.position,
         }
         createCard(obj);
     });
+}
+
+function usePlaceHolderImage(obj){
+    obj.onerror=null;
+    obj.src="assets/placeholder.png";
+    console.log("profile pic is not up to date instead using", obj.src);
 }
 
 function extractType(string, splitter){
@@ -106,10 +154,12 @@ function createCard(user){
 
     const userImage = document.createElement("img");
     userImage.setAttribute("class", "user-image");
+    userImage.setAttribute("onerror", user.placeholder);
     userImage.setAttribute("src", user.image);
 
     const userImage2 = document.createElement("img");
     userImage2.setAttribute("class", "user-image2");
+    userImage2.setAttribute("onerror", user.placeholder);
     userImage2.setAttribute("src", user.image);
 
     const name = document.createElement("div");
@@ -178,7 +228,10 @@ function chosenOption(num){
         canvas.style.visibility = "visible";
         const ctx=canvas.getContext("2d");
         ctx.font = "30px Arial";
-        ctx.fillText("Waiting for Cards to Load...",50,50);
+        const text = "Waiting for Cards to Load...";
+        const fontWidth = ctx.measureText(text).width;
+        const equalOffsetX = (ctx.canvas.width - fontWidth)/2;
+        ctx.fillText(text,equalOffsetX,50);
 
         const container = document.getElementsByClassName("container")[0];
         container.style.visibility = "visible";

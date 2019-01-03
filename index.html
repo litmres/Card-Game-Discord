@@ -1,8 +1,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Discord Members</title>
-    <meta name="description" content="discord server card representation">
+    <title>Card Game</title>
+    <meta name="description" content="Card game made from Discord members">
     <meta name="author" content="twofist">
     <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
@@ -10,18 +10,23 @@
 <link rel="stylesheet" type="text/css" href="stylesheets/index.css">
 
 <body>
+    <div class="heroku" id="herokuContainer">
+        <div class="connecting" id="herokuConnecting">
+            It may take a second for the server to wake up, please be patient.
+            <br>
+            well all need our sleep after all
+        </div>
+        <div class="loader" id="herokuLoader"></div>
+        <div class="error" id="herokuError"></div>
+    </div>
     <div class="option" id="option">
         <div class="canvas-option" onclick="chosenOption(0)">
-            Click here for canvas representation
-            <br>
-            (fancy stuff may take long to load)
+            I wanna play!
         </div>
         <br>
         <br>
         <div class="cards-option" onclick="chosenOption(1)">
-            Click here to just see the cards
-            <br>
-            (no fancy stuff loads quicker)
+            Just show me the cards.
         </div>
     </div>
     <canvas id="canvas"></canvas>
@@ -56,6 +61,8 @@
     <script src="src/dom-to-image.min.js"></script>
     <script src="src/index.js"></script>
     <script src="src/card.js"></script>
+    <script src="src/particle.js"></script>
+    <script src="src/loadingCircle.js"></script>
     <script src="src/buttons/canvasButton.js"></script>
     <script src="src/buttons/surrenderButton.js"></script>
     <script src="src/buttons/queueButton.js"></script>
