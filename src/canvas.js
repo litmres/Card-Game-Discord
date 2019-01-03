@@ -312,7 +312,7 @@ socket.addEventListener('message', function(event) {
 
 
 
-
+/*
 
 function getElementPosition(obj) {
   let curleft = 0
@@ -349,3 +349,5 @@ canvas.addEventListener("click",function(event){
   }
 
 },false);
+
+*/

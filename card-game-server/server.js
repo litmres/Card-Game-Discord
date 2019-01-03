@@ -52,8 +52,6 @@ const wss = new WebSocket.Server({
 
 wss.on('connection', function connection(ws, req) {
     console.log("someone reached the server", getDateTime());
-    
-    ws.isAlive = true;
 
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     
@@ -76,6 +74,7 @@ wss.on('connection', function connection(ws, req) {
     });
 	
     ws.on('message', function(data) {
+        ws.isAlive = true;
         const type = parseInt(extractType(data, TYPE.SPLITTER));
         switch(type){
             case TYPE.MSG_RECEIVE_CONNECTED: broadCastOnlineUsers(ONLINEUSERS);

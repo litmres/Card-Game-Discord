@@ -28,7 +28,7 @@ module.exports = class Player{
     }
     heartBeatTimer(){
         setInterval(()=> {
-            if(this.getHeartBeat()) return this.terminateSocket();
+            if(!this.getHeartBeat()) return this.terminateSocket();
             this.setHeartBeat(false);
             const data = this.TYPE.MSG_SEND_PING + this.TYPE.SPLITTER;
             this.sendToSocket(data);
