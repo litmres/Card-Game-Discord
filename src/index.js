@@ -103,12 +103,19 @@ function receivedAllCards(members){
             description: element.description,
             image: element.image,
             name: element.name,
+            placeholder: "usePlaceHolderImage(this)",
             id: element.id,
             isSpecial: element.isSpecial,
             position: element.position,
         }
         createCard(obj);
     });
+}
+
+function usePlaceHolderImage(obj){
+    obj.onerror=null;
+    obj.src="assets/placeholder.png";
+    console.log("profile pic is not up to date instead using", obj.src);
 }
 
 function extractType(string, splitter){
@@ -147,10 +154,12 @@ function createCard(user){
 
     const userImage = document.createElement("img");
     userImage.setAttribute("class", "user-image");
+    userImage.setAttribute("onerror", user.placeholder);
     userImage.setAttribute("src", user.image);
 
     const userImage2 = document.createElement("img");
     userImage2.setAttribute("class", "user-image2");
+    userImage2.setAttribute("onerror", user.placeholder);
     userImage2.setAttribute("src", user.image);
 
     const name = document.createElement("div");
